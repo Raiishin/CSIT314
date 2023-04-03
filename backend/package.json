@@ -1,0 +1,31 @@
+{
+	"name": "csit314",
+	"version": "1.0.0",
+	"description": "Group Project",
+	"main": "index.js",
+	"type": "module",
+	"scripts": {
+		"start": "node index.js",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Raiishin/CSIT314.git"
+	},
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/Raiishin/CSIT314/issues"
+	},
+	"dependencies": {
+		"cors": "^2.8.5",
+		"crypto-js": "^4.0.0",
+		"dotenv": "^8.2.0",
+		"express": "^4.17.1",
+		"firebase": "^9.6.9"
+	},
+	"engines": {
+		"node": "19.3.0"
+	},
+	"homepage": "https://github.com/Raiishin/CSIT314#readme"
+}
