@@ -14,7 +14,7 @@ npm start
 ```
 
 # Running The Backend
-Default port (5001) 
+Default port (5001) or 10000 on Render(Cloud Deployment)
 ```javascript
 npm install
 npm run dev
