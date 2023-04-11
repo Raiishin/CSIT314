@@ -39,7 +39,21 @@ git log -> to check your commit message has been added correctly
 git push
 ```
 
-# Making Commits
+# Making Commits  
+
+## Branch Naming Format  
+Branches should be named according to this format:  
+
+(Action)/(Brief Description)  
+
+Actions include:  
+- feature  
+- bugfix  
+- refactor  
+
+For Example: 
+
+feature/home-page  
 
 ## Message Format
 Commit messages should follow this format:
