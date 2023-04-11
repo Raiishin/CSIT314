@@ -1,25 +1,10 @@
-const baseApiUrl = "https://private-repo.onrender.com/";
+import config from '../config';
 
-export const queryContactForm = async (
-	firstName,
-	lastName,
-	email,
-	contactNumber,
-	description,
-	serviceSelected
-) => {
-	const response = await fetch(`${baseApiUrl}sendGrid/contact`, {
-		method: "post",
-		headers: { "Content-Type": "application/json" },
-		body: JSON.stringify({
-			firstName,
-			lastName,
-			email,
-			contactNumber,
-			description,
-			serviceSelected,
-		}),
-	});
+import testMovieData from '../test/moviesData';
 
-	return response.json();
+export const getMovies = async () => {
+  const response = await fetch(`https://imdb-api.com/en/API/InTheaters/${config.imdb.apiKey}`);
+  const responseJSON = await response.json();
+
+  return responseJSON.errorMessage !== '' ? testMovieData : responseJSON;
 };
