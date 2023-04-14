@@ -21,7 +21,7 @@ const Navbar = () => {
       <div className="m-4 self-center">
         <ClickableLink href="/" text="Home" />
         <ClickableLink href="/services" text="Services" />
-        <ClickableLink href="/contact" text="Contact Us" />
+        <ClickableLink href="/contact-us" text="Contact Us" />
       </div>
     </div>
   );
