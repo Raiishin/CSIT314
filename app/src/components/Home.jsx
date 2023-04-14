@@ -1,14 +1,9 @@
-import Navbar from './components/Navbar';
+import MovieCard from '../components/MovieCard';
 import React, { useEffect, useState } from 'react';
 
-import { Routes, Route } from 'react-router-dom';
-import Home from './components/Home';
-import Services from './components/Services';
-import ContactUs from './components/ContactUs';
+import { getMovies } from '../api/index';
 
-import { getMovies } from './api/index';
-
-const App = () => {
+const Home = () => {
   const [movies, setMovies] = useState([]);
 
   useEffect(() => {
@@ -29,14 +24,16 @@ const App = () => {
 
   return (
     <div className="text-center">
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/services" element={<Services />} />
-        <Route path="/contact-us" element={<ContactUs />} />
-      </Routes>
+      <body className="grid grid-cols-6">
+        {movies.length > 0 &&
+          movies.map(movie => (
+            <div className="">
+              <MovieCard data={movie} />
+            </div>
+          ))}
+      </body>
     </div>
   );
 };
 
-export default App;
+export default Home;
