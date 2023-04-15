@@ -1,7 +1,7 @@
 import MovieCard from '../components/MovieCard';
 import React, { useEffect, useState } from 'react';
 
-import { getMovies } from '../api/index';
+import { getMovies } from '../api/movies';
 
 const Home = () => {
   const [movies, setMovies] = useState([]);

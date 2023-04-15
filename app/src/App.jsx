@@ -6,7 +6,7 @@ import Home from './components/Home';
 import Services from './components/Services';
 import ContactUs from './components/ContactUs';
 
-import { getMovies } from './api/index';
+import { getMovies } from './api/movies';
 
 const App = () => {
   const [movies, setMovies] = useState([]);
