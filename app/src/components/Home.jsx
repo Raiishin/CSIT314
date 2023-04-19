@@ -28,7 +28,9 @@ const Home = () => {
         {movies.length > 0 &&
           movies.map(movie => (
             <div className="">
+              <button>
               <MovieCard data={movie} />
+              </button>
             </div>
           ))}
       </body>

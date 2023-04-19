@@ -7,7 +7,9 @@ const MovieCard = ({ data }) => {
       <Card sx={{ maxWidth: 400, maxHeight: 400 }}>
         <h1 className="mt-4 underline underline-offset-4">{data.title}</h1>
         <div style={{ 'text-align': '-webkit-center' }}>
-          <img src={data.image} width={250} height={250} className="flex" />
+          <a href={`/movie/${data.id}`}>
+            <img src={data.image} width={250} height={250} className="flex" />
+          </a>
         </div>
       </Card>
     </div>
