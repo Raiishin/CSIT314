@@ -10,3 +10,10 @@ export const getMovies = async () => {
 
   return responseJSON.errorMessage !== '' ? testMovieData : responseJSON;
 };
+
+export const getMovie = async (id) => {
+  const response = await fetch(`https://imdb-api.com/en/API/Title/${config.imdb.apiKey}/${id}`);
+  const responseJSON = await response.json();
+
+  return responseJSON.errorMessage !== '' ? testMovieData : responseJSON;
+}
