@@ -22,6 +22,7 @@ const Navbar = () => {
         <ClickableLink href="/" text="Home" />
         <ClickableLink href="/services" text="Services" />
         <ClickableLink href="/contact-us" text="Contact Us" />
+        <ClickableLink href="/login" text="Login" />
       </div>
     </div>
   );
