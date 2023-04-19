@@ -5,6 +5,8 @@ import { Routes, Route } from 'react-router-dom';
 import Home from './components/Home';
 import Services from './components/Services';
 import ContactUs from './components/ContactUs';
+import Login from './components/Login';
+import ResetPassword from './components/ResetPassword';
 
 import { getMovies } from './api/movies';
 
@@ -34,6 +36,8 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/services" element={<Services />} />
         <Route path="/contact-us" element={<ContactUs />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
       </Routes>
     </div>
   );
