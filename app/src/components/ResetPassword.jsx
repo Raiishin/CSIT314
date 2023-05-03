@@ -21,21 +21,28 @@ const ResetPassword = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      <form className="bg-white p-8 rounded-lg shadow-md max-w-sm w-full" onSubmit={handleSubmit}>
+    <div className="flex flex-col items-center justify-center min-h-screen py-6 bg-gray-50">
+      <h1 className="font-mono text-cyan-600 text-3xl font-large">Reset Password</h1>
+      <form
+        className="bg-white p-8 rounded-lg shadow-md max-w-sm w-full group"
+        onSubmit={handleSubmit}>
         <div className="mb-4">
-          <label className="block text-gray-700 font-bold mb-2" htmlFor="email">
+          <label className="text-left block text-gray-700 font-bold mb-2" htmlFor="email">
             Enter the email address associated with your account:
           </label>
           <input
-            className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className=" hover:bg-cyan-50 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 invalid:[&:not(:placeholder-shown):not(:focus)]:border-red-500 peer"
             id="email"
             type="email"
             placeholder="Email"
+            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
             value={email}
             onChange={handleEmailChange}
             required
           />
+          <span class="mt-2 hidden text-sm text-red-500 peer-[&:not(:placeholder-shown):not(:focus):invalid]:block">
+            Please enter a valid email address
+          </span>
         </div>
         {successMessage && (
           <div
@@ -53,16 +60,14 @@ const ResetPassword = () => {
         )}
         <div className="items-center justify-between">
           <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline group-invalid:pointer-events-none group-invalid:opacity-30"
             type="submit">
             Reset Password
           </button>
-          <p className="text-gray-600 text-sm">
-            <a href="/Login" className="text-blue-500 hover:text-blue-700">
-              Back to Login
-            </a>
-          </p>
         </div>
+        <a href="/Login" className="text-cyan-500 hover:text-cyan-700 text-lg">
+          Back to Login
+        </a>
       </form>
     </div>
   );

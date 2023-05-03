@@ -5,12 +5,15 @@ import { Routes, Route } from 'react-router-dom';
 import Home from './components/Home';
 import Services from './components/Services';
 import ContactUs from './components/ContactUs';
+import BookSeats from './components/BookSeats';
+import SignUp from './components/SignUp';
 
 import Login from './components/Login';
 import ResetPassword from './components/ResetPassword';
 
 import { getMovies } from './api/movies';
 import MovieDetails from './components/MovieDetails';
+import TestSeat from './components/test';
 
 const App = () => {
   const [movies, setMovies] = useState([]);
@@ -41,6 +44,10 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/movie/:id" element={<MovieDetails />} />
+        <Route path="/bookseats" element={<BookSeats />} />
+        <Route path="/TestSeat" element={<TestSeat />} />
+        <Route path="/ResetPassword" element={<ResetPassword />} />
+        <Route path="/register" element={<SignUp />} />
       </Routes>
     </div>
   );
