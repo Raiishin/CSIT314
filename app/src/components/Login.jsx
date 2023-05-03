@@ -46,7 +46,9 @@ const Login = () => {
             type="email"
             placeholder="Enter your email"
             value={email}
-            onChange={handleEmailChange}
+            onChange={async e => {
+              setEmail(e.target.value);
+            }}
             pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
             required
           />
@@ -65,7 +67,9 @@ const Login = () => {
             type="password"
             placeholder="Enter your password"
             value={password}
-            onChange={handlePasswordChange}
+            onChange={async e => {
+              setPassword(e.target.value);
+            }}
             required
           />
           <span class="mt-2 hidden text-sm text-red-500 peer-[&:not(:placeholder-shown):not(:focus):invalid]:block">
