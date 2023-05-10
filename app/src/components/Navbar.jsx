@@ -1,14 +1,21 @@
 import React from 'react';
+import useGlobalStore from '../store/globalStore';
+import { useNavigate } from 'react-router-dom';
 
 // import logo from "../assets/logo.jpg";
 
-const ClickableLink = ({ href, text }) => (
-  <a className="text-xs m-1 md:m-4 lg:m-4 " href={href}>
-    {text}
-  </a>
-);
-
 const Navbar = () => {
+  const userId = useGlobalStore(state => state.userId);
+  const isUserLoggedIn = userId !== '';
+
+  const navigate = useNavigate();
+
+  const ClickableLink = ({ link, text }) => (
+    <a className="text-xs m-1 md:m-4 lg:m-4 cursor-pointer" onClick={() => navigate(link)}>
+      {text}
+    </a>
+  );
+
   return (
     <div className="flex justify-between pl-4 pr-4">
       <div className="m-4">
@@ -19,10 +26,14 @@ const Navbar = () => {
       </div>
 
       <div className="m-4 self-center">
-        <ClickableLink href="/" text="Home" />
-        <ClickableLink href="/services" text="Services" />
-        <ClickableLink href="/contact-us" text="Contact Us" />
-        <ClickableLink href="/login" text="Login" />
+        <ClickableLink link="/" text="Home" />
+        <ClickableLink link="/services" text="Services" />
+        <ClickableLink link="/contact-us" text="Contact Us" />
+        {isUserLoggedIn ? (
+          <ClickableLink link="/profile" text="Profile" />
+        ) : (
+          <ClickableLink link="/login" text="Login" />
+        )}
       </div>
     </div>
   );
