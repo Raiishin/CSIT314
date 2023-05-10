@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 // import logo from "../assets/logo.jpg";
 
-const Navbar = () => {
+const Navbar = props => {
   const userId = useGlobalStore(state => state.userId);
   const isUserLoggedIn = userId !== '';
 
@@ -26,7 +26,6 @@ const Navbar = () => {
       </div>
 
       <div className="m-4 self-center">
-        <ClickableLink link="/" text="Home" />
         <ClickableLink link="/services" text="Services" />
         <ClickableLink link="/contact-us" text="Contact Us" />
         {isUserLoggedIn ? (
@@ -34,9 +33,38 @@ const Navbar = () => {
         ) : (
           <ClickableLink link="/login" text="Login" />
         )}
+
+        <ClickableLink link="/" text="Home" style={props.currentIndex == 'home' && 'active'} />
+        <ClickableLink
+          link="/services"
+          text="Services"
+          style={props.currentIndex == 'serviecs' ? 'active' : null}
+        />
+        <ClickableLink
+          link="/contact-us"
+          text="Contact Us"
+          style={props.currentIndex == 'contact' ? 'active' : null}
+        />
+        <ClickableLink
+          link="/login"
+          text="Login"
+          style={props.currentIndex == 'login' ? 'active' : null}
+        />
+        <ClickableLink
+          link="/staffweb"
+          text="Staff Web"
+          style={props.currentIndex == 'staff-home' ? 'active' : null}
+        />
+        <ClickableLink
+          link="/adminweb"
+          text="Admin Web"
+          style={props.currentIndex == 'admin-home' ? 'active' : null}
+        />
       </div>
     </div>
   );
 };
+
+const styles = {};
 
 export default Navbar;
