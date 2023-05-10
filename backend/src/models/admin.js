@@ -1,9 +1,9 @@
 import User from './user.js';
 import userTypeEnum from '../constants/userTypeEnum.js';
 
-class Staff extends User {
+class Admin extends User {
   constructor(id, name, email, phoneNumber) {
-    super(id, name, email, userTypeEnum.STAFF);
+    super(id, name, email, userTypeEnum.ADMIN);
     this.phoneNumber = phoneNumber;
   }
 
@@ -12,4 +12,4 @@ class Staff extends User {
   }
 }
 
-export default Staff;
+export default Admin;

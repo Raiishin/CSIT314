@@ -1,70 +1,61 @@
 import React from 'react';
+import logo from '../assets/img/cbimage.png';
+import avatar from '../assets/img/avatar.jpg';
 import useGlobalStore from '../store/globalStore';
 import { useNavigate } from 'react-router-dom';
-
-// import logo from "../assets/logo.jpg";
+import userTypeEnum from '../constants/userTypeEnum.js';
 
 const Navbar = props => {
   const userId = useGlobalStore(state => state.userId);
+  const accessLevel = useGlobalStore(state => state.accessLevel);
   const isUserLoggedIn = userId !== '';
 
   const navigate = useNavigate();
 
+  // TODO :: Logout logic
+
   const ClickableLink = ({ link, text }) => (
-    <a className="text-xs m-1 md:m-4 lg:m-4 cursor-pointer" onClick={() => navigate(link)}>
+    <a
+      className="text-xs m-1 md:m-4 lg:m-4 cursor-pointer text-brown"
+      onClick={() => navigate(link)}>
       {text}
     </a>
   );
 
   return (
-    <div className="flex justify-between pl-4 pr-4">
-      <div className="m-4">
-        {/* <img
-					src={logo}
-					className="min-w-[80px] max-w-[80px] sm:max-w-[100px] md:max-w-[200px] lg:w-[100px]"
-				></img> */}
+    <div className="flex justify-between pl-2 pr-4 bg-light-brown">
+      <div className="m-4 cursor-pointer flex" onClick={() => navigate('/')}>
+        <img src={logo} className="w-[70px]"></img>
+        <h1 className="text-brown">Cinematic Adventures</h1>
       </div>
 
-      <div className="m-4 self-center">
-        <ClickableLink link="/services" text="Services" />
-        <ClickableLink link="/contact-us" text="Contact Us" />
+      {console.log(accessLevel)}
+      <div className="m-4 self-center flex">
+        <ClickableLink link="/home" text="Home" />
+        <ClickableLink link="/promotions" text="Promotions" />
         {isUserLoggedIn ? (
-          <ClickableLink link="/profile" text="Profile" />
+          <div className="flex">
+            <img src={avatar} className="w-[40px] mr-2" onClick={() => navigate('/profile')}></img>
+            <ClickableLink link="/" text="Logout" />
+          </div>
         ) : (
           <ClickableLink link="/login" text="Login" />
         )}
 
-        <ClickableLink link="/" text="Home" style={props.currentIndex == 'home' && 'active'} />
-        <ClickableLink
-          link="/services"
-          text="Services"
-          style={props.currentIndex == 'serviecs' ? 'active' : null}
-        />
-        <ClickableLink
-          link="/contact-us"
-          text="Contact Us"
-          style={props.currentIndex == 'contact' ? 'active' : null}
-        />
-        <ClickableLink
-          link="/login"
-          text="Login"
-          style={props.currentIndex == 'login' ? 'active' : null}
-        />
-        <ClickableLink
-          link="/staffweb"
-          text="Staff Web"
-          style={props.currentIndex == 'staff-home' ? 'active' : null}
-        />
-        <ClickableLink
-          link="/adminweb"
-          text="Admin Web"
-          style={props.currentIndex == 'admin-home' ? 'active' : null}
-        />
+        {accessLevel === userTypeEnum.ADMIN && (
+          <div>
+            <ClickableLink link="/staffweb" text="Staff Web" />
+            {accessLevel === userTypeEnum.MANAGEMENT && (
+              <div>
+                <ClickableLink link="/adminweb" text="Admin Web" />
+                <ClickableLink link="/manage-movies" text="Manage Movies" />
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
 };
-
-const styles = {};
 
 export default Navbar;

@@ -5,6 +5,7 @@ import config from '../config/index.js';
 import Customer from '../models/customer.js';
 import User from '../models/user.js';
 import Staff from '../models/staff.js';
+import Admin from '../models/admin.js';
 import userTypeEnum from '../constants/userTypeEnum.js';
 
 // Initialize Firebase
@@ -52,6 +53,9 @@ const view = async (req, res, next) => {
         } else if (data.type === userTypeEnum.STAFF) {
           const staff = new Staff(item.id, data.name, data.email, data.phoneNumber);
           returnObject = staff;
+        } else if (data.type === userTypeEnum.ADMIN) {
+          const admin = new Admin(item.id, data.name, data.email, data.phoneNumber);
+          returnObject = admin;
         } else {
           const user = new User(item.id, data.name, data.email);
           returnObject = user;
