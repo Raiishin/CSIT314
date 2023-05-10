@@ -8,7 +8,8 @@ const ClickableLink = ({ href, text }) => (
   </a>
 );
 
-const Navbar = () => {
+const Navbar = (props) => {
+  console.log(props)
   return (
     <div className="flex justify-between pl-4 pr-4">
       <div className="m-4">
@@ -19,13 +20,20 @@ const Navbar = () => {
       </div>
 
       <div className="m-4 self-center">
-        <ClickableLink href="/" text="Home" />
-        <ClickableLink href="/services" text="Services" />
-        <ClickableLink href="/contact-us" text="Contact Us" />
-        <ClickableLink href="/login" text="Login" />
+        <ClickableLink href="/" text="Home" style={(props.currentIndex == "home")?"active":null}/>
+        <ClickableLink href="/services" text="Services"  style={(props.currentIndex == "serviecs")?"active":null}/>
+        <ClickableLink href="/contact-us" text="Contact Us"  style={(props.currentIndex == "contact")?"active":null}/>
+        <ClickableLink href="/login" text="Login"  style={(props.currentIndex == "login")?"active":null}/>
+        <ClickableLink href="/staffweb" text="Staff Web"  style={(props.currentIndex == "staff-home")?"active":null}/>
+        <ClickableLink href="/adminweb" text="Admin Web"  style={(props.currentIndex == "admin-home")?"active":null}/>
       </div>
     </div>
   );
 };
+
+
+const styles={
+  
+}
 
 export default Navbar;

@@ -1,7 +1,7 @@
 import Navbar from './components/Navbar';
 import React, { useEffect, useState } from 'react';
 
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import Home from './components/Home';
 import Services from './components/Services';
 import ContactUs from './components/ContactUs';
@@ -11,6 +11,9 @@ import ResetPassword from './components/ResetPassword';
 
 import { getMovies } from './api/movies';
 import MovieDetails from './components/MovieDetails';
+
+import Staffweb from './components/Staffweb';
+import Adminweb from './components/Adminweb';
 
 const App = () => {
   const [movies, setMovies] = useState([]);
@@ -41,6 +44,8 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/movie/:id" element={<MovieDetails />} />
+        <Route path="/staffweb" element={<Staffweb />} />
+        <Route path="/adminweb" element={<Adminweb />} />
       </Routes>
     </div>
   );
