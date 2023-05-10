@@ -17,7 +17,7 @@ const Login = () => {
     // If successful, will return the user id
     if (response.id) {
       // Set global state and redirect back to homepage
-      useGlobalStore.setState({ userId: response.id });
+      useGlobalStore.setState({ userId: response.id, accessLevel: response.type });
 
       return navigate('/');
     }
