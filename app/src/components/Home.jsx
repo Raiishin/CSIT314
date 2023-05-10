@@ -11,13 +11,8 @@ const Home = () => {
   useEffect(() => {
     const retrieveMovies = async () => {
       if (movies.length === 0) {
-        const moviesResponse = await getMovies();
-        console.log(moviesResponse);
-
-        // Check if there are any errors
-        if (moviesResponse.errorMessage === '') {
-          setMovies(moviesResponse.items);
-        }
+        const { moviesData } = await getMovies();
+        setMovies(moviesData);
       }
     };
 
@@ -104,7 +99,7 @@ const Home = () => {
   }
 
   return (
-    <div>
+    <div className="bg-dark-brown">
       <div style={styles.container}>
         <div style={styles.topContainer}>
           <div style={styles.buyCheckContainer}>
@@ -119,6 +114,15 @@ const Home = () => {
                 style={!isQuickBuy ? styles.buyCheckButtonActive : styles.buyCheckButton}>
                 {'Check Purchase'}
               </button>
+              <button
+                onClick={() => setIsQuickBuy(false)}
+                style={!isQuickBuy ? styles.buyCheckButtonActive : styles.buyCheckButton}>
+                {'Check Purchase'}
+              </button>
+            </div>
+            <div style={styles.quickBuyContainter}>
+              {quickBuyContent}
+              {checkPurchaseContent}
             </div>
             <div style={styles.quickBuyContainter}>
               {quickBuyContent}
@@ -130,7 +134,7 @@ const Home = () => {
           </div>
         </div>
       </div>
-      <div className="text-center">
+      <div className="text-center bg-dark-brown">
         <body className="grid grid-cols-6">
           {movies.length > 0 &&
             movies.map(movie => (
