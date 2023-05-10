@@ -1,33 +1,41 @@
 import React, { useState } from 'react';
+import { createUser } from '../api/user.js';
+import useGlobalStore from '../store/globalStore';
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    phone: ''
-  });
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
 
-  const handleChange = event => {
-    setFormData(prevFormData => ({
-      ...prevFormData,
-      [event.target.name]: event.target.value
-    }));
-  };
+  const navigate = useNavigate();
 
-  const handleSubmit = event => {
+  const handleSubmit = async event => {
     event.preventDefault();
 
     // Check that the password and confirm password fields match
-    if (formData.password !== formData.confirmPassword) {
-      alert('Passwords do not match');
-      return;
+    if (password !== confirmPassword) {
+      return alert('Passwords do not match');
     }
 
-    // Submit the form data to the server or perform other actions as needed
-    console.log(formData);
+    const response = await createUser(name, email, password, phoneNumber);
+
+    // Will return a message if an error occurred
+    if (response.message) {
+      return alert(response.message);
+    }
+
+    // If successful, will return the user id
+    if (response.id) {
+      // Set global state and redirect back to homepage
+      useGlobalStore.setState({ userId: response.id });
+
+      return navigate('/');
+    }
   };
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen py-6 bg-gray-50">
       <h1 className="font-mono text-cyan-600 text-3xl font-large">Register</h1>
@@ -51,8 +59,10 @@ const Register = () => {
               name="name"
               id="name"
               placeholder="e.g John Doe"
-              value={formData.name}
-              onChange={handleChange}
+              value={name}
+              onChange={async e => {
+                setName(e.target.value);
+              }}
             />
           </div>
           <div>
@@ -64,10 +74,12 @@ const Register = () => {
               type="tel"
               name="phone"
               id="phone"
-              pattern="[0-9]{8}"
-              placeholder="e.g 12345678"
-              value={formData.phone}
-              onChange={handleChange}
+              pattern="[8-9]{1}[0-9]{7}"
+              placeholder="e.g 81234567"
+              value={phoneNumber}
+              onChange={async e => {
+                setPhoneNumber(e.target.value);
+              }}
               required
             />
             <span class="mt-2 hidden text-sm text-red-500 peer-[&:not(:placeholder-shown):not(:focus):invalid]:block">
@@ -86,8 +98,10 @@ const Register = () => {
               id="email"
               placeholder="e.g email@email"
               pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
-              value={formData.email}
-              onChange={handleChange}
+              value={email}
+              onChange={async e => {
+                setEmail(e.target.value);
+              }}
               required
             />
             <span class="mt-2 hidden text-sm text-red-500 peer-[&:not(:placeholder-shown):not(:focus):invalid]:block">
@@ -105,8 +119,10 @@ const Register = () => {
               id="password"
               placeholder="Enter your password"
               pattern=".{7,}"
-              value={formData.password}
-              onChange={handleChange}
+              value={password}
+              onChange={async e => {
+                setPassword(e.target.value);
+              }}
             />
             <span class="mt-2 hidden text-sm text-red-500 peer-[&:not(:placeholder-shown):not(:focus):invalid]:block">
               Your password must be at least 7 characters long
@@ -124,8 +140,10 @@ const Register = () => {
               name="confirmPassword"
               id="confirmPassword"
               placeholder="Enter your password"
-              value={formData.confirmPassword}
-              onChange={handleChange}
+              value={confirmPassword}
+              onChange={async e => {
+                setConfirmPassword(e.target.value);
+              }}
             />
           </div>
           <div>

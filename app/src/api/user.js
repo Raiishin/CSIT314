@@ -1,5 +1,6 @@
 import { saltPassword } from '../library/index.js';
 
+// const backendEndpoint = 'http://localhost:5001';
 const backendEndpoint = 'https://csit314-project-backend.onrender.com';
 
 export const userLogin = async (email, password) => {
@@ -16,8 +17,10 @@ export const createUser = async (name, email, password, phoneNumber) => {
 
   const response = await fetch(`${backendEndpoint}/createUser`, {
     method: 'POST',
-    body: { name, email, password: saltedPassword, phoneNumber }
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, email, password: saltedPassword, phoneNumber })
   });
+
   const responseJSON = await response.json();
 
   return responseJSON;
