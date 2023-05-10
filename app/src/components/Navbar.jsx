@@ -58,4 +58,6 @@ const Navbar = props => {
   );
 };
 
+const styles = {};
+
 export default Navbar;

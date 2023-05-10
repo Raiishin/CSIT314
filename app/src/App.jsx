@@ -1,7 +1,7 @@
 import Navbar from './components/Navbar';
 import React, { useEffect, useState } from 'react';
 
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import Home from './components/Home';
 import Services from './components/Services';
 import ContactUs from './components/ContactUs';
@@ -15,6 +15,9 @@ import MovieDetails from './components/MovieDetails';
 // import TestSeat from './components/test';
 
 import { getMovies } from './api/movies';
+
+import Staffweb from './components/Staffweb';
+import Adminweb from './components/Adminweb';
 
 const App = () => {
   const [movies, setMovies] = useState([]);
