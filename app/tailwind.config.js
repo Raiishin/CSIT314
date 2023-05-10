@@ -6,7 +6,9 @@ module.exports = {
       colors: {
         purple: '#343a5e',
         blue: '#1E40AF',
-        'light-blue': '#3B82F6'
+        'light-blue': '#3B82F6',
+        brown: '#AC8B54',
+        'light-brown': '#4C453C'
       }
     }
   },
