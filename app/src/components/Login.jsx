@@ -1,36 +1,27 @@
 import { useState } from 'react';
+import { userLogin } from '../api/user.js';
+import useGlobalStore from '../store/globalStore';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const handleEmailChange = e => {
-    setEmail(e.target.value);
-  };
+  const navigate = useNavigate();
 
-  const handlePasswordChange = e => {
-    setPassword(e.target.value);
-  };
-
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault();
-  };
 
-  const authenticate = () => {
-    // Add authentication logic here, e.g. make an API call to a server
-    // If the authentication is successful, set the isAuthenticated state to true
-    setIsAuthenticated(true);
-  };
+    const response = await userLogin(email, password);
 
-  // TODO: After login, redirect to home page
-  //useEffect or import useHistory
-  // useEffect(() => {
-  //   if (isAuthenticated) {
-  //     // Redirect to the dashboard or home page
-  //     return <Redirect to="/dashboard" />;
-  //   }
-  // }, [isAuthenticated]);
+    // If successful, will return the user id
+    if (response.id) {
+      // Set global state and redirect back to homepage
+      useGlobalStore.setState({ userId: response.id });
+
+      return navigate('/');
+    }
+  };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen py-6 bg-gray-50">
@@ -55,7 +46,9 @@ const Login = () => {
             type="email"
             placeholder="Enter your email"
             value={email}
-            onChange={handleEmailChange}
+            onChange={async e => {
+              setEmail(e.target.value);
+            }}
             pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
             required
           />
@@ -74,7 +67,9 @@ const Login = () => {
             type="password"
             placeholder="Enter your password"
             value={password}
-            onChange={handlePasswordChange}
+            onChange={async e => {
+              setPassword(e.target.value);
+            }}
             required
           />
           <span class="mt-2 hidden text-sm text-red-500 peer-[&:not(:placeholder-shown):not(:focus):invalid]:block">

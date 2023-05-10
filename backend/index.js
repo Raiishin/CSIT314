@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import UserController from './src//controllers/user.js';
+import UserController from './src/controllers/user.js';
 
 const app = express();
 const port = process.env.PORT || 5001;

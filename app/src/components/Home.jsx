@@ -29,7 +29,7 @@ const Home = () => {
           movies.map(movie => (
             <div className="">
               <button>
-              <MovieCard data={movie} />
+                <MovieCard data={movie} />
               </button>
             </div>
           ))}
