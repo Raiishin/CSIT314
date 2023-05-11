@@ -36,34 +36,35 @@ const view = async (req, res, next) => {
     // Error handling if there are no results
     if (usersData.docs.length == 0) {
       return res.json({ message: 'Incorrect password or no such user exists' });
-    } else {
-      usersData.forEach(item => {
-        const data = item.data();
-
-        if (data.type === userTypeEnum.CUSTOMER) {
-          const customer = new Customer(
-            item.id,
-            data.name,
-            data.email,
-            data.phoneNumber,
-            data.walletBalance
-          );
-
-          returnObject = customer;
-        } else if (data.type === userTypeEnum.STAFF) {
-          const staff = new Staff(item.id, data.name, data.email, data.phoneNumber);
-          returnObject = staff;
-        } else if (data.type === userTypeEnum.ADMIN) {
-          const admin = new Admin(item.id, data.name, data.email, data.phoneNumber);
-          returnObject = admin;
-        } else {
-          const user = new User(item.id, data.name, data.email);
-          returnObject = user;
-        }
-      });
-
-      return res.json(returnObject);
     }
+
+    usersData.forEach(item => {
+      const data = item.data();
+
+      if (data.type === userTypeEnum.CUSTOMER) {
+        const customer = new Customer(
+          item.id,
+          data.name,
+          data.email,
+          data.phoneNumber,
+          data.walletBalance,
+          data.loyaltyPoints
+        );
+
+        returnObject = customer;
+      } else if (data.type === userTypeEnum.STAFF) {
+        const staff = new Staff(item.id, data.name, data.email, data.phoneNumber);
+        returnObject = staff;
+      } else if (data.type === userTypeEnum.ADMIN) {
+        const admin = new Admin(item.id, data.name, data.email, data.phoneNumber);
+        returnObject = admin;
+      } else {
+        const user = new User(item.id, data.name, data.email);
+        returnObject = user;
+      }
+    });
+
+    return res.json(returnObject);
   } catch (err) {
     next(err);
   }
@@ -89,7 +90,8 @@ const create = async (req, res, next) => {
       email,
       phoneNumber,
       type: userTypeEnum.CUSTOMER,
-      walletBalance: 0
+      walletBalance: 0,
+      loyaltyPoints: 0
     });
 
     return res.json({ id: resp.id });
