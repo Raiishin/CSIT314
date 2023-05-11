@@ -1,19 +1,15 @@
-import config from '../config';
-
-import testMovieData from '../test/moviesData';
-
-const imdbEndpoint = 'https://imdb-api.com/en/API';
+const backendEndpoint = 'https://csit314-project-backend.onrender.com';
 
 export const getMovies = async () => {
-  const response = await fetch(`${imdbEndpoint}/InTheaters/${config.imdb.apiKey}`);
+  const response = await fetch(`${backendEndpoint}/movies`);
   const responseJSON = await response.json();
 
-  return responseJSON.errorMessage !== '' ? testMovieData : responseJSON;
+  return responseJSON;
 };
 
-export const getMovie = async (id) => {
-  const response = await fetch(`https://imdb-api.com/en/API/Title/${config.imdb.apiKey}/${id}`);
+export const getMovie = async id => {
+  const response = await fetch(`${backendEndpoint}/movie?movieId=${id}`);
   const responseJSON = await response.json();
 
-  return responseJSON.errorMessage !== '' ? testMovieData : responseJSON;
-}
+  return responseJSON;
+};
