@@ -29,3 +29,62 @@ h1 {
 p {
   margin: 4px
 }
+
+.react-datepicker {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 0.8rem;
+  background-color: #1D1D1F;
+  color: #fff;
+  border: 0px;
+  border-radius: 0;
+  display: inline-block;
+  position: relative;
+  margin-left: 25%;
+}
+
+.react-datepicker__header {
+  text-align: center;
+  background-color: #1D1D1F;
+  border-bottom: 0px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  padding-top: 8px;
+  position: relative;
+  color: #fff;
+
+}
+
+.react-datepicker__today-button {
+  background: #1D1D1F;
+  border-top: 0px;
+  cursor: pointer;
+  text-align: center;
+  font-weight: bold;
+  padding: 5px 0;
+  clear: left;
+  color: #fff;
+}
+
+.react-datepicker__day{
+  color: white;
+  background-color: #262629;
+}
+
+.react-datepicker__day--selected{
+  background-color: #216ba5;
+  color: white;
+}
+
+.react-datepicker__day--disabled{
+  color: #95a5a6;
+  background-color: transparent;
+}
+
+.react-datepicker__day--outside-month, .react-datepicker__day-name, .react-datepicker__current-month{
+  color: #95a5a6;
+  background-color: transparent;
+}
+
+.react-datepicker__day:hover, .react-datepicker__month-text:hover, .react-datepicker__quarter-text:hover, .react-datepicker__year-text:hover{
+  color: black;
+}

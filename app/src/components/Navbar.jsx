@@ -47,7 +47,6 @@ const Navbar = props => {
             <ClickableLink link="/staffweb" text="Staff Web" />
             {accessLevel === userTypeEnum.MANAGEMENT && (
               <div>
-                <ClickableLink link="/adminweb" text="Admin Web" />
                 <ClickableLink link="/manage-movies" text="Manage Movies" />
               </div>
             )}
