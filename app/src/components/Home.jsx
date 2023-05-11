@@ -114,15 +114,6 @@ const Home = () => {
                 style={!isQuickBuy ? styles.buyCheckButtonActive : styles.buyCheckButton}>
                 {'Check Purchase'}
               </button>
-              <button
-                onClick={() => setIsQuickBuy(false)}
-                style={!isQuickBuy ? styles.buyCheckButtonActive : styles.buyCheckButton}>
-                {'Check Purchase'}
-              </button>
-            </div>
-            <div style={styles.quickBuyContainter}>
-              {quickBuyContent}
-              {checkPurchaseContent}
             </div>
             <div style={styles.quickBuyContainter}>
               {quickBuyContent}
