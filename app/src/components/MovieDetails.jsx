@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { getMovie } from '../api/movies.js';
+import { getMovie, getReview } from '../api/movies.js';
 
 const MovieDetails = () => {
   const [movie, setMovie] = useState({});
+  const [review, setReview] = useState({});
   const params = useParams();
   const [selectedTiming, setSelectedTiming] = useState('');
   const [selectedLocation, setSelectedLocation] = useState('');
@@ -32,6 +33,14 @@ const MovieDetails = () => {
     if (typeof params !== 'undefined') {
       retrieveMovie();
     }
+    const retrieveReview = async () => {
+      console.log(dataReview);
+      const dataReview = await getReview(params.id);
+      setReview(dataReview);
+    };
+    if (typeof params !== 'undefined') {
+      retrieveReview();
+    };
   }, []);
   return (
     <div className="bg-gray-800 min-h-screen py-12 md:py-20 px-4 md:px-0">
@@ -51,7 +60,6 @@ const MovieDetails = () => {
             <div className="flex flex-wrap mb-4">
               <h2 className="text-lg font-medium mr-2">Genres:</h2>
               <ul>
-                {/* <li className="inline-block text-gray-400 mr-2 mb-2">Actor 1</li> */}
                 {movie.genres !== [] && typeof movie.genres !== "undefined" && movie.genres.split(",").map(genre => {
                   return (
                     <li className="inline-block bg-gray-700 rounded-full py-1 px-3 text-sm font-medium text-gray-400 mr-2 mb-2">
@@ -99,9 +107,9 @@ const MovieDetails = () => {
                 Timings at {selectedLocation}
               </h4>
               <ul>
-                {timings.map((timing) => (
-                  <li key={timing}>{timing.time}</li>
-                ))}
+                  {timings.map((timing) => (
+                    <li key={timing} href="/">{timing.time}</li>
+                  ))}
               </ul>
             </div>
           )}
@@ -116,20 +124,8 @@ const MovieDetails = () => {
               alt="Customer Review"
             />
             <div className="ml-4">
-              <h3 className="text-white font-semibold">Customer Name</h3>
+              <h3 className="text-white font-semibold">{review.imDbId}</h3>
               <p className="text-gray-400 text-sm">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Pellentesque eu ipsum a quam commodo euismod vitae id massa.
-                Sed vitae sapien lectus. Praesent sagittis, nisl ac lacinia
-                iaculis, enim tellus tempor libero, a commodo dui sapien sit
-                amet nibh. Duis sed purus vitae odio suscipit feugiat at ac
-                quam. Aliquam erat volutpat. Praesent gravida commodo tortor,
-                sit amet consectetur enim. Aliquam a lectus vel nunc commodo
-                lobortis non non purus. Donec maximus efficitur lacus, eu
-                aliquet tellus. Pellentesque in aliquet justo. Vestibulum ante
-                ipsum primis in faucibus orci luctus et ultrices posuere
-                cubilia curae; Suspendisse accumsan dui eget arcu volutpat
-                aliquet. Praesent eu libero at purus malesuada tincidunt.
               </p>
             </div>
           </div>
