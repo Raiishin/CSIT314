@@ -6,6 +6,8 @@ const ResetPassword = () => {
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
+  const navigate = useNavigate();
+
   const handleEmailChange = e => {
     setEmail(e.target.value);
   };
