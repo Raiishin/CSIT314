@@ -13,3 +13,10 @@ export const getMovie = async id => {
 
   return responseJSON;
 };
+
+export const getReview = async id => {
+  const response = await fetch(`https://imdb-api.com/en/API/Reviews/${'k_10m052oa'}/${id}`);
+  const responseJSON = await response.json();
+
+  return responseJSON;
+};
