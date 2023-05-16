@@ -1,8 +1,8 @@
 // Movie Controller
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, getDocs, addDoc, query, where } from 'firebase/firestore/lite';
+import { getFirestore, collection, getDocs, query, where } from 'firebase/firestore/lite';
 import config from '../config/index.js';
-import moviesData from '../test/moviesData.js';
+
 
 // Initialize Firebase
 const app = initializeApp(config.firebaseConfig);
