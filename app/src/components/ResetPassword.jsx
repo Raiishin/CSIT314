@@ -65,9 +65,11 @@ const ResetPassword = () => {
             Reset Password
           </button>
         </div>
-        <a href="/Login" className="text-cyan-500 hover:text-cyan-700 text-lg">
+        <div
+          className="text-cyan-500 hover:text-cyan-700 text-lg cursor-pointer"
+          onClick={() => navigate('/login')}>
           Back to Login
-        </a>
+        </div>
       </form>
     </div>
   );

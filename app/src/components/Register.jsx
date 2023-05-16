@@ -40,14 +40,16 @@ const Register = () => {
     <div className="flex flex-col items-center justify-center min-h-screen py-6 bg-gray-50">
       <h1 className="font-mono text-cyan-600 text-3xl font-large">Register</h1>
       <div className="p-8 bg-white rounded-lg shadow-md">
-        <h2 className="text-lg text-gray-400 font-medium mb-6">
-          Already have an account?{' '}
-          <a
-            href="/login"
-            className="text-light-blue text-cyan-600 hover:text-cyan-700 underline underline-offset-2">
-            Login Here
-          </a>{' '}
-        </h2>
+        <div className="flex">
+          <h2 className="flex text-lg text-gray-400 font-medium mb-6">
+            Already have an account?
+            <div
+              className="ml-2 flex text-light-blue text-cyan-600 hover:text-cyan-700 underline underline-offset-2 cursor-pointer"
+              onClick={() => navigate('/login')}>
+              Login Here
+            </div>
+          </h2>
+        </div>
         <form className="space-y-6 group" onSubmit={handleSubmit} noValidate>
           <div>
             <label className="text-left text-cyan-600 block mb-2 font-medium" htmlFor="name">
