@@ -31,7 +31,7 @@ const Navbar = props => {
 
       {console.log(accessLevel)}
       <div className="m-4 self-center flex">
-        <ClickableLink link="/home" text="Home" />
+        <ClickableLink link="/" text="Home" />
         <ClickableLink link="/promotions" text="Promotions" />
         {isUserLoggedIn ? (
           <div className="flex">

@@ -28,14 +28,17 @@ const Login = () => {
       <h1 className="font-mono text-cyan-600 text-3xl font-large">Login</h1>
       <form className="p-8 rounded-lg shadow-lg max-w-sm w-full group" onSubmit={handleSubmit}>
         <div className="mb-4">
-          <h2 className="text-lg text-gray-400 font-medium mb-6">
-            Don't have an account?{' '}
-            <a
-              href="/register"
-              className="text-light-blue text-cyan-600 hover:text-cyan-700 underline underline-offset-2">
-              Register Here
-            </a>{' '}
-          </h2>
+          <div className="flex">
+            <h2 className="flex text-lg text-gray-400 font-medium mb-6">
+              Don't have an account?
+              <div
+                className="ml-2 flex text-light-blue text-cyan-600 hover:text-cyan-700 underline underline-offset-2 cursor-pointer"
+                onClick={() => navigate('/register')}>
+                Register Here
+              </div>
+            </h2>
+          </div>
+
           <label
             className="text-left text-cyan-600 block text-gray-700 font-medium mb-2"
             htmlFor="email">
