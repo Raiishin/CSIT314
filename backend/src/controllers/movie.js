@@ -3,6 +3,7 @@ import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, getDocs, query, where } from 'firebase/firestore/lite';
 import config from '../config/index.js';
 
+
 // Initialize Firebase
 const app = initializeApp(config.firebaseConfig);
 const db = getFirestore(app);
