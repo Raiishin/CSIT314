@@ -86,9 +86,11 @@ const Login = () => {
             Sign In
           </button>
         </div>
-        <a href="/reset-password" className="text-cyan-600 hover:text-blue">
+        <div
+          className="cursor-pointer text-cyan-600 hover:text-blue"
+          onClick={() => navigate('/reset-password')}>
           Forgot your password?
-        </a>
+        </div>
       </form>
     </div>
   );
