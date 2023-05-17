@@ -142,7 +142,7 @@ const ManageMovies = () => {
                 onChange={e => setSelectedTimeslot(e.target.value)}
                 style={styles.selectStyle}>
                 {timeslots.map((timeslot, index) => (
-                  <option value={`${index}`}>{timeslot}</option>
+                  <option value={`${timeslot}`}>{timeslot}</option>
                 ))}
               </select>
             </div>

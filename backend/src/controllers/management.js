@@ -39,17 +39,18 @@ const getTimeslots = async (req, res) => {
 
 const createMovieShowtime = async (req, res, next) => {
   try {
-    const { cinemaId, hallId, movieId, showtimeId, date } = req.body;
+    const { cinemaName, hallId, movieId, showtime, date } = req.body;
 
+    const formattedDate = new Date(date);
     const movieShowtimes = collection(db, 'movieShowtimes');
 
     // Validate if this showtime is already taken
     const searchQuery = query(
       movieShowtimes,
-      where('cinemaId', '==', cinemaId),
+      where('cinemaName', '==', cinemaName),
       where('hallId', '==', hallId),
-      where('showtimeId', '==', showtimeId),
-      where('date', '==', date)
+      where('showtime', '==', showtime),
+      where('date', '==', formattedDate)
     );
 
     const movieShowtimesData = await getDocs(searchQuery);
@@ -60,11 +61,11 @@ const createMovieShowtime = async (req, res, next) => {
 
     // Create new user, default to being a customer
     const resp = await addDoc(movieShowtimes, {
-      cinemaId,
+      cinemaName,
       hallId,
       movieId,
-      showtimeId,
-      date
+      showtime,
+      date: formattedDate
     });
 
     return res.json({ id: resp.id });
