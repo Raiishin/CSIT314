@@ -1,7 +1,7 @@
 import { saltPassword } from '../library/index.js';
 
-// const backendEndpoint = 'http://localhost:5001';
-const backendEndpoint = 'https://csit314-project-backend.onrender.com';
+const backendEndpoint = 'http://localhost:5001';
+// const backendEndpoint = 'https://csit314-project-backend.onrender.com';
 
 export const userLogin = async (email, password) => {
   const saltedPassword = saltPassword(password);

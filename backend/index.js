@@ -23,6 +23,7 @@ router.post('/createUser', UserController.create);
 
 router.get('/movies', MovieController.index);
 router.get('/movie', MovieController.view);
+router.get('/movieShowtimes', MovieController.getMovieShowtimes);
 
 router.get('/management/cinemas', ManagementController.getCinemas);
 router.get('/management/cinemaHalls', ManagementController.getCinemaHalls);

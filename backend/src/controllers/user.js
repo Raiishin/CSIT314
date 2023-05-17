@@ -6,6 +6,7 @@ import Customer from '../models/customer.js';
 import User from '../models/user.js';
 import Staff from '../models/staff.js';
 import Admin from '../models/admin.js';
+import Management from '../models/management.js';
 import userTypeEnum from '../constants/userTypeEnum.js';
 
 // Initialize Firebase
@@ -58,6 +59,9 @@ const view = async (req, res, next) => {
       } else if (data.type === userTypeEnum.ADMIN) {
         const admin = new Admin(item.id, data.name, data.email, data.phoneNumber);
         returnObject = admin;
+      } else if (data.type === userTypeEnum.MANAGEMENT) {
+        const management = new Management(item.id, data.name, data.email, userTypeEnum.MANAGEMENT);
+        returnObject = management;
       } else {
         const user = new User(item.id, data.name, data.email);
         returnObject = user;
