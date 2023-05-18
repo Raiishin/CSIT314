@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { FaUserCircle, FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const ProfilePage = () => {
@@ -17,26 +16,26 @@ const ProfilePage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [isPasswordsMatch, setIsPasswordsMatch] = useState(true);
-  //
+
   const isContactNumberInvalid = !/^\d{8,}$/.test(formData.contactNumber);
   const isPasswordInvalid = formData.password.length < 7;
   const isSaveButtonDisabled = isContactNumberInvalid || isPasswordInvalid;
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get('Profiles.json');
-        setProfileData(response.data[0]);
-        setFormData({
-          ...response.data[0]
-        });
-        // setShowPassword(false);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await axios.get('Profiles.json');
+  //       setProfileData(response.data[0]);
+  //       setFormData({
+  //         ...response.data[0]
+  //       });
+  //       // setShowPassword(false);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   fetchData();
+  // }, []);
 
   //   const handleEditClick = () => {
   //     setIsEditing(true);
@@ -233,7 +232,8 @@ const ProfilePage = () => {
               </span>
               <div
                 className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer mt-4"
-                onClick={handleTogglePasswordVisibility}>
+                onClick={handleTogglePasswordVisibility}
+              >
                 {showPassword ? (
                   <FaEyeSlash className="text-gray-400 hover:text-gray-600" />
                 ) : (
@@ -272,12 +272,14 @@ const ProfilePage = () => {
                 }`}
                 //   onClick={handleSaveClick}
                 // disabled={isSaveButtonDisabled || !isPasswordsMatch}
-                type="submit">
+                type="submit"
+              >
                 Save
               </button>
               <button
                 className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded"
-                onClick={handleCancelClick}>
+                onClick={handleCancelClick}
+              >
                 Cancel
               </button>
             </div>
@@ -309,7 +311,8 @@ const ProfilePage = () => {
           <div className="flex justify-end">
             <button
               className="bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded"
-              onClick={handleEditClick}>
+              onClick={handleEditClick}
+            >
               Edit
             </button>
           </div>
