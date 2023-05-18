@@ -20,6 +20,7 @@ const router = express.Router();
 router.get('/users', UserController.index);
 router.get('/user', UserController.view);
 router.post('/createUser', UserController.create);
+router.post('/updateUser', UserController.update);
 
 router.get('/movies', MovieController.index);
 router.get('/movie', MovieController.view);

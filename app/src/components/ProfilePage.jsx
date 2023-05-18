@@ -1,61 +1,35 @@
 import React, { useState, useEffect } from 'react';
 import { FaUserCircle, FaEye, FaEyeSlash } from 'react-icons/fa';
+import useGlobalStore from '../store/globalStore';
+import { updateUser } from '../api/user.js';
 
 const ProfilePage = () => {
-  const [profileData, setProfileData] = useState({});
   const [isEditing, setIsEditing] = useState(false);
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    contactNumber: '',
-    password: '',
-    confirmPassword: ''
-  });
+
+  const [userPhoneNumber, setUserPhoneNumber] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+
   const [passwordMatchError, setPasswordMatchError] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [isPasswordsMatch, setIsPasswordsMatch] = useState(true);
+  const [isSaveButtonDisabled, setIsSaveButtonDisabled] = useState(true);
 
-  const isContactNumberInvalid = !/^\d{8,}$/.test(formData.contactNumber);
-  const isPasswordInvalid = formData.password.length < 7;
-  const isSaveButtonDisabled = isContactNumberInvalid || isPasswordInvalid;
+  const userId = useGlobalStore(state => state.userId);
+  const name = useGlobalStore(state => state.name);
+  const email = useGlobalStore(state => state.email);
+  const phoneNumber = useGlobalStore(state => state.phoneNumber);
+  const loyaltyPoints = useGlobalStore(state => state.loyaltyPoints);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await axios.get('Profiles.json');
-  //       setProfileData(response.data[0]);
-  //       setFormData({
-  //         ...response.data[0]
-  //       });
-  //       // setShowPassword(false);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   fetchData();
-  // }, []);
-
-  //   const handleEditClick = () => {
-  //     setIsEditing(true);
-  //     setFormData({
-  //       ...formData,
-  //       password: profileData.password,
-  //       confirmPassword: ''
-  //     });
-  //     setPasswordMatchError(false);
-  //     setShowConfirmPassword(false);
-  //     setSuccessMessage('');
-  //   };
+  useEffect(() => {
+    setUserPhoneNumber(phoneNumber);
+  }, []);
 
   const handleEditClick = () => {
     setIsEditing(true);
-    setFormData(prevState => ({
-      ...prevState,
-      password: profileData.password,
-      confirmPassword: ''
-    }));
+
     setPasswordMatchError(false);
     setShowConfirmPassword(false);
     setSuccessMessage('');
@@ -63,27 +37,32 @@ const ProfilePage = () => {
 
   const handleCancelClick = () => {
     setIsEditing(false);
-    setFormData({
-      ...formData,
-      password: '',
-      confirmPassword: ''
-    });
+
     setPasswordMatchError(false);
     setShowConfirmPassword(false);
     setShowPassword(false);
     setSuccessMessage('');
   };
 
-  const handleSaveClick = e => {
+  const handleSaveClick = async e => {
     e.preventDefault(); // Prevent the default form submission behavior
+
+    const response = await updateUser(userId, password, userPhoneNumber);
+
+    console.log(response);
+
+    useGlobalStore.setState({ phoneNumber: response.phoneNumber });
+    setUserPhoneNumber(response.phoneNumber);
+
     setShowPassword(false);
+
     // if (showConfirmPassword && formData.password !== formData.confirmPassword) {
     //   setPasswordMatchError(true);
     //   setIsEditing(true);
     // }
-    if (!isPasswordsMatch || isContactNumberInvalid) {
-      return;
-    }
+    // if (!isPasswordsMatch || isContactNumberInvalid) {
+    //   return;
+    // }
     // if (isPasswordsMatch) {
 
     // }
@@ -92,7 +71,7 @@ const ProfilePage = () => {
     // You can use the formData object to access the updated values
     // For simplicity, we're just updating the state in this example
     // if (showConfirmPassword && formData.password === formData.confirmPassword) {
-    setProfileData(formData);
+    // setProfileData(formData);
     setIsEditing(false);
     setPasswordMatchError(false);
     setShowConfirmPassword(false);
@@ -110,22 +89,15 @@ const ProfilePage = () => {
         setShowConfirmPassword(confirmed);
       } else if (showConfirmPassword && value === '') {
         setShowConfirmPassword(false);
-        setFormData(prevState => ({
-          ...prevState,
-          confirmPassword: ''
-        }));
+
         setPasswordMatchError(false);
       }
     }
 
-    setFormData({
-      ...formData,
-      [name]: value
-    });
-    if (name === 'confirmPassword') {
-      setPasswordMatchError(value !== formData.password);
-      setIsPasswordsMatch(value === formData.password);
-    }
+    // if (name === 'confirmPassword') {
+    //   setPasswordMatchError(value !== formData.password);
+    //   setIsPasswordsMatch(value === formData.password);
+    // }
   };
 
   const handleTogglePasswordVisibility = () => {
@@ -147,89 +119,47 @@ const ProfilePage = () => {
         <>
           <form className="group" onSubmit={handleSaveClick} noValidate>
             <div className="mb-4">
-              <label htmlFor="name" className="text-gray-700 font-bold mb-2">
-                Name
-              </label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                disabled
-                className="border rounded-lg px-3 py-2 w-full"
-              />
+              <label className="text-gray-700 font-bold mb-2">Name</label>
+              <input value={name} disabled className="border rounded-lg px-3 py-2 w-full" />
             </div>
 
             <div className="mb-4">
-              <label htmlFor="email" className="text-gray-700 font-bold mb-2">
-                Email Address
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                disabled
-                onChange={handleChange}
-                className="border rounded-lg px-3 py-2 w-full"
-              />
+              <label className="text-gray-700 font-bold mb-2">Email Address</label>
+              <input value={email} disabled className="border rounded-lg px-3 py-2 w-full" />
             </div>
 
             <div className="mb-4">
-              <label htmlFor="contactNumber" className="text-gray-700 font-bold mb-2">
-                Contact Number
-              </label>
+              <label className="text-gray-700 font-bold mb-2">Phone Number</label>
               <input
-                type="text"
-                id="contactNumber"
-                pattern="[0-9]{8}"
-                name="contactNumber"
-                inputMode="numeric"
+                type="number"
+                pattern="[8-9]{1}[0-9]{7}"
+                name="phoneNumber"
+                value={userPhoneNumber}
+                onChange={async e => {
+                  setUserPhoneNumber(e.target.value);
+                }}
+                className="appearance-no-arrow focus:ring-transparent block hover:bg-cyan-50 border rounded-lg px-3 py-2 w-full invalid:[&:not(:placeholder-shown):not(:focus)]:border-red-500 peer"
                 required
-                value={formData.contactNumber}
-                onChange={handleChange}
-                className="hover:bg-cyan-50 border rounded-lg px-3 py-2 w-full invalid:[&:not(:placeholder-shown):not(:focus)]:border-red-500 peer"
               />
-              <span class="mt-2 hidden text-sm text-red-500 peer-[&:not(:placeholder-shown):not(:focus):invalid]:block">
+              {/* <span class="mt-2 hidden text-sm text-red-500 peer-[&:not(:placeholder-shown):not(:focus):invalid]:block">
                 Please enter a valid Singapore phone number
-              </span>
+              </span> */}
             </div>
-
-            {/* <div className="mb-4">
-              <label htmlFor="gender" className="text-gray-700 font-bold mb-2">
-                Gender
-              </label>
-              <select
-                id="gender"
-                name="gender"
-                value={formData.gender}
-                disabled
-                onChange={handleChange}
-                className="border rounded-lg px-3 py-2 w-full">
-                <option value="">Select gender</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="other">Other</option>
-              </select>
-            </div> */}
 
             <div className="mb-4 relative">
-              <label htmlFor="password" className="text-gray-700 font-bold mb-2">
-                Password
-              </label>
+              <label className="text-gray-700 font-bold mb-2">Password</label>
               <input
                 type={showPassword ? 'text' : 'password'}
                 id="password"
                 name="password"
                 pattern=".{7,}"
-                value={formData.password}
+                value={password}
                 onChange={handleChange}
                 className="hover:bg-cyan-50 border rounded-lg px-3 py-2 w-full pr-10 invalid:[&:not(:placeholder-shown):not(:focus)]:border-red-500 peer"
               />
-              <span class="mt-2 hidden text-sm text-red-500 peer-[&:not(:placeholder-shown):not(:focus):invalid]:block">
+              {/* <span class="mt-2 hidden text-sm text-red-500 peer-[&:not(:placeholder-shown):not(:focus):invalid]:block">
                 Your password must be at least 7 characters long
-              </span>
+              </span> */}
               <div
                 className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer mt-4"
                 onClick={handleTogglePasswordVisibility}
@@ -249,9 +179,8 @@ const ProfilePage = () => {
                 </label>
                 <input
                   type="text"
-                  id="confirmPassword"
                   name="confirmPassword"
-                  value={formData.confirmPassword}
+                  value={confirmPassword}
                   onChange={handleChange}
                   className="hover:bg-cyan-50 border rounded-lg px-3 py-2 w-full"
                 />
@@ -266,7 +195,7 @@ const ProfilePage = () => {
                 className={`bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded mr-2 ${
                   isSaveButtonDisabled
                     ? 'bg-gray-400 cursor-not-allowed hover:bg-gray-400'
-                    : showConfirmPassword && (!isPasswordsMatch || formData.confirmPassword === '')
+                    : showConfirmPassword && (!isPasswordsMatch || confirmPassword === '')
                     ? 'bg-gray-400 cursor-not-allowed hover:bg-gray-400'
                     : ''
                 }`}
@@ -288,24 +217,23 @@ const ProfilePage = () => {
       ) : (
         <>
           <div className="mb-4">
-            <strong className="text-gray-700 font-bold">Name:</strong> {profileData.name}
+            <strong className="text-gray-700 font-bold">Name:</strong> {name}
           </div>
 
           <div className="mb-4">
-            <strong className="text-gray-700 font-bold">Email:</strong> {profileData.email}
+            <strong className="text-gray-700 font-bold">Email:</strong> {email}
           </div>
 
           <div className="mb-4">
-            <strong className="text-gray-700 font-bold">Contact Number:</strong>{' '}
-            {profileData.contactNumber}
+            <strong className="text-gray-700 font-bold">Phone Number:</strong> {phoneNumber}
           </div>
-
-          {/* <div className="mb-4">
-            <strong className="text-gray-700 font-bold">Gender:</strong> {profileData.gender}
-          </div> */}
 
           <div className="mb-4">
             <strong className="text-gray-700 font-bold">Password:</strong> ********
+          </div>
+
+          <div className="mb-4">
+            <strong className="text-gray-700 font-bold">Loyalty Points:</strong> ${loyaltyPoints}
           </div>
 
           <div className="flex justify-end">

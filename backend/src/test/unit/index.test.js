@@ -1,4 +1,4 @@
-import { saltPassword, formatDate } from '../../library/index.js';
+import { saltPassword, formatDate, validatePhoneNumber } from '../../library/index.js';
 
 test('Salt passsword', async () => {
   const password = 'password';
@@ -18,4 +18,14 @@ test('Format date', async () => {
 
   const testDate3 = new Date(new Date(23235678900).toUTCString());
   expect(formatDate(testDate3)).toMatchInlineSnapshot(`"26 Sep"`);
+});
+
+test('Validate phone number', async () => {
+  expect(validatePhoneNumber('12345678')).toMatchInlineSnapshot(`false`);
+
+  expect(validatePhoneNumber('81234567')).toMatchInlineSnapshot(`true`);
+
+  expect(validatePhoneNumber('91234567')).toMatchInlineSnapshot(`true`);
+
+  expect(validatePhoneNumber('01234567')).toMatchInlineSnapshot(`false`);
 });

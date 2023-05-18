@@ -25,3 +25,17 @@ export const createUser = async (name, email, password, phoneNumber) => {
 
   return responseJSON;
 };
+
+export const updateUser = async (id, password, phoneNumber) => {
+  const saltedPassword = saltPassword(password);
+
+  const response = await fetch(`${backendEndpoint}/updateUser`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id, password: saltedPassword, phoneNumber })
+  });
+
+  const responseJSON = await response.json();
+
+  return responseJSON;
+};

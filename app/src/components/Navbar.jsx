@@ -43,12 +43,12 @@ const Navbar = props => {
           <ClickableLink link="/login" text="Login" />
         )}
 
-        <div className="mt-3">
+        <div className="">
           {accessLevel >= userTypeEnum.MANAGEMENT && (
-            <div>
+            <div className="flex">
               <ClickableLink link="/manage-movies" text="Manage Movies" />
               {accessLevel >= userTypeEnum.ADMIN && (
-                <div>
+                <div className="flex">
                   <ClickableLink link="/staffweb" text="Staff Web" />
                 </div>
               )}

@@ -11,9 +11,7 @@ import Login from './components/Login';
 import ResetPassword from './components/ResetPassword';
 import MovieDetails from './components/MovieDetails';
 import ManageMovies from './components/ManageMovies';
-
-// import BookSeats from './components/BookSeats';
-// import TestSeat from './components/test';
+import ProfilePage from './components/ProfilePage';
 
 const App = () => {
   return (
@@ -27,6 +25,8 @@ const App = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/movie/:id" element={<MovieDetails />} />
+        <Route path="/profile" element={<ProfilePage />} />
+
         {/* <Route path="/bookseats" element={<BookSeats />} /> */}
         {/* <Route path="/TestSeat" element={<TestSeat />} /> */}
         <Route path="/manage-movies" element={<ManageMovies />} />
