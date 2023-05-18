@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { FaArrowLeft } from 'react-icons/fa';
 import SeatMapper from './SeatMapper';
+import VisaLogo from '../assets/visa.png';
+import MastercardLogo from '../assets/mastercard.png';
+import AmexLogo from '../assets/amex.png';
+import DiscoverLogo from '../assets/discover.png';
 //import SeatingPlanForm from './SeatingPlanForm';
 
 const TicketPurchase = ({ movie }) => {
@@ -9,24 +13,57 @@ const TicketPurchase = ({ movie }) => {
   const [selectedTime, setSelectedTime] = useState('');
   const [selectedTheater, setSelectedTheater] = useState('');
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('');
-  const [paymentInfo, setPaymentInfo] = useState({
-    cardNumber: '',
-    cardName: '',
-    expiryMonth: '',
-    expiryYear: '',
-    cvv: ''
-  });
+  const [cardNumber, setCardNumber] = useState('');
+  const [cardHolder, setCardHolder] = useState('');
+  const [expiration, setExpiration] = useState('');
+  const [cvv, setCVV] = useState('');
+
   const [showSeatingPlan, setShowSeatingPlan] = useState(false);
   const [seatingPlan, setSeatingPlan] = useState([]);
   const [loadingSeatingPlan, setLoadingSeatingPlan] = useState(false);
 
+  // const handleSeatSelection = seat => {
+  //   const seatString = `${seat.seatRow}${seat.seatNumber}`;
+  //   if (selectedSeats.includes(seatString)) {
+  //     setSelectedSeats(selectedSeats.filter(s => s !== seatString));
+  //   } else {
+  //     setSelectedSeats([...selectedSeats, seatString]);
+  //   }
+  // };
+
   const handleSeatSelection = seat => {
-    if (selectedSeats.includes(seat)) {
-      setSelectedSeats(selectedSeats.filter(s => s !== seat));
+    const seatIndex = selectedSeats.findIndex(
+      selectedSeat =>
+        selectedSeat.seatRow === seat.seatRow && selectedSeat.seatNumber === seat.seatNumber
+    );
+
+    if (seatIndex > -1) {
+      // Remove seat from selectedSeats
+      const updatedSelectedSeats = [...selectedSeats];
+      updatedSelectedSeats.splice(seatIndex, 1);
+      setSelectedSeats(updatedSelectedSeats);
     } else {
+      // Add seat to selectedSeats
       setSelectedSeats([...selectedSeats, seat]);
     }
   };
+
+  // const handleSeatSelection = (seatRow, seatNumber) => {
+  //   const seat = { seatRow, seatNumber };
+  //   setSelectedSeats(prevSelectedSeats => {
+  //     const seatIndex = prevSelectedSeats.findIndex(
+  //       seat => seat.seatRow === seatRow && seat.seatNumber === seatNumber
+  //     );
+  //     if (seatIndex > -1) {
+  //       return [
+  //         ...prevSelectedSeats.slice(0, seatIndex),
+  //         ...prevSelectedSeats.slice(seatIndex + 1)
+  //       ];
+  //     } else {
+  //       return [...prevSelectedSeats, seat];
+  //     }
+  //   });
+  // };
 
   const handleDateSelection = dateTime => {
     setSelectedDate(dateTime);
@@ -44,13 +81,13 @@ const TicketPurchase = ({ movie }) => {
     setSelectedPaymentMethod(paymentMethod);
   };
 
-  const handlePaymentInfoChange = event => {
-    const { name, value } = event.target;
-    setPaymentInfo(prevPaymentInfo => ({
-      ...prevPaymentInfo,
-      [name]: value
-    }));
-  };
+  // const handlePaymentInfoChange = event => {
+  //   const { name, value } = event.target;
+  //   setPaymentInfo(prevPaymentInfo => ({
+  //     ...prevPaymentInfo,
+  //     [name]: value
+  //   }));
+  // };
 
   const handleSubmit = event => {
     event.preventDefault();
@@ -85,18 +122,108 @@ const TicketPurchase = ({ movie }) => {
   const handleViewSeatingPlanClick = () => {
     alert(`Showing seating plan for ${selectedDate} ${selectedTime} at ${selectedTheater}`);
     //setLoadingSeatingPlan(true);
-    fetch(`/api/seatingPlan?date=${selectedDate}&time=${selectedTime}&theater=${selectedTheater}`)
+    //fetch(`/api/seatingPlan?date=${selectedDate}&time=${selectedTime}&theater=${selectedTheater}`);
+    fetch('seatData.json')
       .then(response => response.json())
       .then(data => {
         setSeatingPlan(data);
         setShowSeatingPlan(true);
         setLoadingSeatingPlan(false);
-      });
+      })
+      .catch(error => console.error('Error fetching seat data:', error));
+    // const filteredSeats = selectedSeats.filter(
+    //   seat =>
+    //     seat.date === selectedDate && seat.time === selectedTime && seat.theatre === selectedTheater
+    // );
   };
   useEffect(() => {
     setShowSeatingPlan(false);
   }, [selectedDate, selectedTime, selectedTheater]);
 
+  // credit card handlers
+  const handleCardNumberChange = e => {
+    let formattedNumber = e.target.value.replace(/\s/g, '');
+    if (cardType === 'amex') {
+      formattedNumber = formattedNumber.slice(0, 15);
+    } else {
+      formattedNumber = formattedNumber.slice(0, 16);
+    }
+    formattedNumber = formattedNumber.replace(/(\d{4})/g, '$1 ').trim();
+    setCardNumber(formattedNumber);
+  };
+
+  const handleCardHolderChange = e => {
+    setCardHolder(e.target.value);
+  };
+
+  const handleExpirationChange = e => {
+    let formattedExpiration = e.target.value.replace(/[^0-9]/g, '');
+    if (formattedExpiration.length > 6) {
+      formattedExpiration = formattedExpiration.slice(0, 6);
+    }
+    if (formattedExpiration.length >= 3) {
+      formattedExpiration = formattedExpiration.slice(0, 2) + '/' + formattedExpiration.slice(2);
+    }
+    setExpiration(formattedExpiration);
+  };
+
+  const handleCVVChange = e => {
+    let formattedCVV = e.target.value.replace(/[^0-9]/g, '');
+    if (cardType === 'amex') {
+      formattedCVV = formattedCVV.slice(0, 4);
+    } else {
+      formattedCVV = formattedCVV.slice(0, 3);
+    }
+    setCVV(formattedCVV);
+  };
+
+  const getCardType = cardNumber => {
+    const cardTypes = [
+      {
+        type: 'visa',
+        pattern: /^4/
+      },
+      {
+        type: 'mastercard',
+        pattern: /^5[1-5]/
+      },
+      {
+        type: 'amex',
+        pattern: /^3[47]/
+      },
+      {
+        type: 'discover',
+        pattern: /^6(?:011|5[0-9]{2})/
+      }
+    ];
+
+    for (const cardType of cardTypes) {
+      if (cardNumber.match(cardType.pattern)) {
+        return cardType.type;
+      }
+    }
+
+    return '';
+  };
+
+  const getCardLogo = cardType => {
+    switch (cardType) {
+      case 'visa':
+        return VisaLogo;
+      case 'mastercard':
+        return MastercardLogo;
+      case 'amex':
+        return AmexLogo;
+      case 'discover':
+        return DiscoverLogo;
+      default:
+        return null;
+    }
+  };
+
+  const cardType = getCardType(cardNumber);
+
+  //const totalSelectedSeats = selectedSeats.length;
   return (
     <>
       <div className="bg-gray-100 min-h-screen">
@@ -182,42 +309,43 @@ const TicketPurchase = ({ movie }) => {
               </div>
             </div>
 
-            <SeatMapper
+            {/* <SeatMapper
               selectedSeats={selectedSeats}
               onSeatSelection={handleSeatSelection}
               seatingPlan={seatingPlan}
-            />
+            /> */}
 
-            {/* {showSeatingPlan && (
+            {showSeatingPlan && (
               <SeatMapper
                 selectedSeats={selectedSeats}
                 onSeatSelection={handleSeatSelection}
                 seatingPlan={seatingPlan}
               />
-            )} */}
+            )}
 
-            <div className="mt-8">
+            {/* <div className="mt-8">
               <div className="bg-gray-200 text-black font-bold py-2 px-4 rounded">
-                Total Tickets: {selectedSeats.length} (Seats: {selectedSeats.join(', ')}) @ $
+                Total Tickets: {selectedSeats.length} (Seats:{' '}
+                {selectedSeats.map(seat => `${seat.seatRow}${seat.seatNumber}`).join(', ')})
                 {calculateTotalPrice()}
               </div>
-            </div>
+            </div> */}
 
-            <div className="bg-gray-200 py-0">
+            {/* <div className="bg-gray-200 py-0">
               <div className="container mx-auto">
                 <h2 className="text-xl mb-4">Selected Seats:</h2>
                 <div className="flex flex-wrap justify-center">
                   {selectedSeats.length === 0 && <p className="text-gray-600">None</p>}
-                  {selectedSeats.map(seat => (
+                  {selectedSeats.map((seat, index) => (
                     <div
-                      key={seat}
+                      key={index}
                       className="bg-blue-500 rounded-full w-8 h-8 flex items-center justify-center mr-2 mb-2">
-                      <p className="text-cyan-400 font-bold">{seat}</p>
+                      <p className="text-cyan-400 font-bold">{`${seat.seatRow}${seat.seatNumber}`}</p>
                     </div>
                   ))}
                 </div>
               </div>
-            </div>
+            </div> */}
 
             <h2 className="text-2xl font-bold mt-8 mb-4">Payment Information</h2>
             <div className="flex flex-col items-center">
@@ -238,83 +366,112 @@ const TicketPurchase = ({ movie }) => {
               </div>
             </div>
             {selectedPaymentMethod === 'credit-card' && (
-              <form onSubmit={handleSubmit}>
-                <div className="mb-4">
-                  <label htmlFor="cardNumber" className="block text-gray-700 font-bold mb-2">
-                    Card Number
-                  </label>
-
-                  <input
-                    type="text"
-                    id="cardNumber"
-                    name="cardNumber"
-                    value={paymentInfo.cardNumber}
-                    onChange={handlePaymentInfoChange}
-                    className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label htmlFor="cardName" className="block text-gray-700 font-bold mb-2">
-                    Cardholder Name
-                  </label>
-                  <input
-                    type="text"
-                    id="cardName"
-                    name="cardName"
-                    value={paymentInfo.cardName}
-                    onChange={handlePaymentInfoChange}
-                    className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  />
-                </div>
-                <div className="flex mb-4">
-                  <div className="w-1/2 mr-2">
-                    <label htmlFor="expiryMonth" className="block text-gray-700 font-bold mb-2">
-                      Expiry Month
-                    </label>
-                    <input
-                      type="text"
-                      id="expiryMonth"
-                      name="expiryMonth"
-                      value={paymentInfo.expiryMonth}
-                      onChange={handlePaymentInfoChange}
-                      className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    />
-                  </div>
-
-                  <div className="w-1/2 ml-2">
-                    <label htmlFor="expiryYear" className="block text-gray-700 font-bold mb-2">
-                      Expiry Year
-                    </label>
-                    <input
-                      type="text"
-                      id="expiryYear"
-                      name="expiryYear"
-                      value={paymentInfo.expiryYear}
-                      onChange={handlePaymentInfoChange}
-                      className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    />
+              <div className="flex flex-col items-center mt-8">
+                <div className="bg-gray-100 p-8 rounded w-96 mb-4">
+                  <h2 className="text-2xl mb-4">Credit Card Preview</h2>
+                  <div className="bg-white p-4 rounded">
+                    {cardType && (
+                      <div className="flex items-center mt-4">
+                        <img
+                          src={getCardLogo(cardType)}
+                          alt={cardType.type}
+                          className="w-8 h-8 mr-2"
+                        />
+                        <span className="text-sm font-bold capitalize">{cardType.type}</span>
+                      </div>
+                    )}
+                    <div className="flex justify-between mb-4">
+                      <div className="text-lg font-bold">
+                        {cardHolder ? cardHolder : 'Cardholder Name'}
+                      </div>
+                      <div className="text-lg font-bold">{expiration ? expiration : 'MM/YY'}</div>
+                    </div>
+                    <div className="text-xl font-bold mb-4">
+                      {cardNumber ? cardNumber : '**** **** **** ****'}
+                    </div>
+                    <div className="flex justify-between">
+                      <div className="text-sm">CVV</div>
+                      <div className="text-sm">{cvv ? cvv : '***'}</div>
+                    </div>
                   </div>
                 </div>
-                <div className="mb-4">
-                  <label htmlFor="cvv" className="block text-gray-700 font-bold mb-2">
-                    CVV
-                  </label>
-                  <input
-                    type="text"
-                    id="cvv"
-                    name="cvv"
-                    value={paymentInfo.cvv}
-                    onChange={handlePaymentInfoChange}
-                    className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  />
+                <div className="bg-white shadow p-8 rounded w-96">
+                  <h2 className="text-2xl mb-4">Credit Card Information</h2>
+                  <form className="group">
+                    <div className="mb-4">
+                      <label
+                        className="block text-gray-700 text-sm font-bold mb-2"
+                        htmlFor="cardNumber">
+                        Card Number
+                      </label>
+                      <input
+                        className="hover:bg-cyan-50 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:shadow-outline"
+                        id="cardNumber"
+                        type="text"
+                        placeholder="Enter card number"
+                        value={cardNumber}
+                        required
+                        onChange={handleCardNumberChange}
+                      />
+                    </div>
+                    <div className="mb-4">
+                      <label
+                        className="block text-gray-700 text-sm font-bold mb-2"
+                        htmlFor="cardHolder">
+                        Card Holder
+                      </label>
+                      <input
+                        className="hover:bg-cyan-50 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:shadow-outline"
+                        id="cardHolder"
+                        type="text"
+                        placeholder="Enter card holder name"
+                        value={cardHolder}
+                        required
+                        onChange={handleCardHolderChange}
+                      />
+                    </div>
+                    <div className="flex justify-between mb-4">
+                      <div className="w-1/2 mr-2">
+                        <label
+                          className="block text-gray-700 text-sm font-bold mb-2"
+                          htmlFor="expiration">
+                          Expiration Date
+                        </label>
+                        <input
+                          className="hover:bg-cyan-50 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:shadow-outline"
+                          id="expiration"
+                          type="text"
+                          placeholder="MM/YYYY"
+                          value={expiration}
+                          required
+                          onChange={handleExpirationChange}
+                        />
+                      </div>
+                      <div className="w-1/2 ml-2">
+                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="cvv">
+                          CVV
+                        </label>
+                        <input
+                          className="hover:bg-cyan-50 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:shadow-outline"
+                          id="cvv"
+                          type="text"
+                          placeholder="Enter CVV"
+                          value={cvv}
+                          required
+                          onChange={handleCVVChange}
+                        />
+                      </div>
+                    </div>
+                    <div className="mb-6">
+                      <button
+                        className="bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline group-invalid:pointer-events-none group-invalid:opacity-30"
+                        type="submit">
+                        Submit
+                      </button>
+                    </div>
+                  </form>
                 </div>
-
-                <div className="flex justify-end">
-                  <button className="bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded">
-                    Proceed to payment
-                  </button>
-                </div>
-              </form>
+              </div>
             )}
 
             {selectedPaymentMethod === 'DBS' && (
