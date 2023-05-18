@@ -17,7 +17,14 @@ const Login = () => {
     // If successful, will return the user id
     if (response.id) {
       // Set global state and redirect back to homepage
-      useGlobalStore.setState({ userId: response.id, accessLevel: response.type });
+      useGlobalStore.setState({
+        userId: response.id,
+        accessLevel: response.type,
+        name: response.name,
+        email: response.email,
+        phoneNumber: response.phoneNumber,
+        loyaltyPoints: response.loyaltyPoints ?? 0
+      });
 
       return navigate('/');
     }
@@ -33,7 +40,8 @@ const Login = () => {
               Don't have an account?
               <div
                 className="ml-2 flex text-light-blue text-cyan-600 hover:text-cyan-700 underline underline-offset-2 cursor-pointer"
-                onClick={() => navigate('/register')}>
+                onClick={() => navigate('/register')}
+              >
                 Register Here
               </div>
             </h2>
@@ -41,7 +49,8 @@ const Login = () => {
 
           <label
             className="text-left text-cyan-600 block text-gray-700 font-medium mb-2"
-            htmlFor="email">
+            htmlFor="email"
+          >
             Email
           </label>
           <input
@@ -62,7 +71,8 @@ const Login = () => {
         <div className="mb-6">
           <label
             className="text-left text-cyan-600 block text-gray-700 font-medium mb-2"
-            htmlFor="password">
+            htmlFor="password"
+          >
             Password
           </label>
           <input
@@ -82,13 +92,15 @@ const Login = () => {
         <div className="items-center justify-between">
           <button
             className="bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2 px-8 rounded focus:outline-none focus:shadow-outline border-2 border-gray-300 group-invalid:pointer-events-none group-invalid:opacity-30"
-            type="submit">
+            type="submit"
+          >
             Sign In
           </button>
         </div>
         <div
           className="cursor-pointer text-cyan-600 hover:text-blue"
-          onClick={() => navigate('/reset-password')}>
+          onClick={() => navigate('/reset-password')}
+        >
           Forgot your password?
         </div>
       </form>

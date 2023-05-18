@@ -1,8 +1,9 @@
 class User {
-  constructor(id, name, email, type) {
+  constructor(id, name, email, phoneNumber, type) {
     this.id = id;
     this.name = name;
     this.email = email;
+    this.phoneNumber = phoneNumber;
     this.type = type;
   }
 
@@ -20,6 +21,10 @@ class User {
 
   static get type() {
     return this.type;
+  }
+
+  static get phoneNumber() {
+    return this.phoneNumber;
   }
 }
 
