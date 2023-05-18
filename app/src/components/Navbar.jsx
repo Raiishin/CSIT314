@@ -8,16 +8,16 @@ import userTypeEnum from '../constants/userTypeEnum.js';
 const Navbar = props => {
   const userId = useGlobalStore(state => state.userId);
   const accessLevel = useGlobalStore(state => state.accessLevel);
+  const reset = useGlobalStore(state => state.reset);
   const isUserLoggedIn = userId !== '';
 
   const navigate = useNavigate();
 
-  // TODO :: Logout logic
-
   const ClickableLink = ({ link, text }) => (
     <a
       className="text-xs m-1 md:m-4 lg:m-4 cursor-pointer text-brown"
-      onClick={() => navigate(link)}>
+      onClick={() => navigate(link)}
+    >
       {text}
     </a>
   );
@@ -29,29 +29,32 @@ const Navbar = props => {
         <h1 className="text-brown">Cinematic Adventures</h1>
       </div>
 
-      {console.log(accessLevel)}
       <div className="m-4 self-center flex">
         <ClickableLink link="/" text="Home" />
         <ClickableLink link="/promotions" text="Promotions" />
         {isUserLoggedIn ? (
-          <div className="flex">
+          <div className="flex mt-2">
             <img src={avatar} className="w-[40px] mr-2" onClick={() => navigate('/profile')}></img>
-            <ClickableLink link="/" text="Logout" />
+            <div className="mt-1" onClick={() => reset()}>
+              <ClickableLink link="/login" text="Logout" />
+            </div>
           </div>
         ) : (
           <ClickableLink link="/login" text="Login" />
         )}
 
-        {accessLevel === userTypeEnum.ADMIN && (
-          <div>
-            <ClickableLink link="/staffweb" text="Staff Web" />
-            {accessLevel === userTypeEnum.MANAGEMENT && (
-              <div>
-                <ClickableLink link="/manage-movies" text="Manage Movies" />
-              </div>
-            )}
-          </div>
-        )}
+        <div className="mt-3">
+          {accessLevel >= userTypeEnum.MANAGEMENT && (
+            <div>
+              <ClickableLink link="/manage-movies" text="Manage Movies" />
+              {accessLevel >= userTypeEnum.ADMIN && (
+                <div>
+                  <ClickableLink link="/staffweb" text="Staff Web" />
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

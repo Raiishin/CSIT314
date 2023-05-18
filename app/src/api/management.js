@@ -1,4 +1,5 @@
-const backendEndpoint = 'https://csit314-project-backend.onrender.com';
+const backendEndpoint = 'http://localhost:5001';
+// const backendEndpoint = 'https://csit314-project-backend.onrender.com';
 
 // TODO :: ACL for APIs
 // Only management can access these apis
@@ -31,11 +32,11 @@ export const getMovies = async () => {
   return responseJSON;
 };
 
-export const saveShowtimes = async (cinemaId, hallId, movieId, showtimeId, date) => {
+export const saveShowtimes = async (cinemaName, hallId, movieId, showtime, date) => {
   const response = await fetch(`${backendEndpoint}/management/saveShowtimes`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ cinemaId, hallId, movieId, showtimeId, date })
+    body: JSON.stringify({ cinemaName, hallId, movieId, showtime, date })
   });
   const responseJSON = await response.json();
 
