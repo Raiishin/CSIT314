@@ -14,6 +14,11 @@ const Login = () => {
 
     const response = await userLogin(email, password);
 
+    // Will return a message if an error occurred
+    if (response.message) {
+      return alert(response.message);
+    }
+
     // If successful, will return the user id
     if (response.id) {
       // Set global state and redirect back to homepage
