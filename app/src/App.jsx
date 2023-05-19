@@ -15,6 +15,8 @@ import MovieDetails from './components/MovieDetails';
 import Staffweb from './components/Staffweb';
 import Adminweb from './components/Adminweb';
 
+import MgmtReport from './components/MgmtReport';
+
 const App = () => {
   const [movies, setMovies] = useState([]);
 
@@ -46,6 +48,7 @@ const App = () => {
         <Route path="/movie/:id" element={<MovieDetails />} />
         <Route path="/staffweb" element={<Staffweb />} />
         <Route path="/adminweb" element={<Adminweb />} />
+        <Route path="/mgmtreport" element={<MgmtReport />} />
       </Routes>
     </div>
   );

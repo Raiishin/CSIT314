@@ -26,6 +26,7 @@ const Navbar = (props) => {
         <ClickableLink href="/login" text="Login"  style={(props.currentIndex == "login")?"active":null}/>
         <ClickableLink href="/staffweb" text="Staff Web"  style={(props.currentIndex == "staff-home")?"active":null}/>
         <ClickableLink href="/adminweb" text="Admin Web"  style={(props.currentIndex == "admin-home")?"active":null}/>
+        <ClickableLink href="/mgmtreport" text="Mgmt Report"  style={(props.currentIndex == "mgmt-home")?"active":null}/>
       </div>
     </div>
   );

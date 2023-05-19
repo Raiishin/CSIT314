@@ -56,3 +56,23 @@
   .react-datepicker__day:hover, .react-datepicker__month-text:hover, .react-datepicker__quarter-text:hover, .react-datepicker__year-text:hover{
     color: black;
   }
+
+  .rdt_TableHeadRow{
+    background-color: #272320!important;
+    color: white!important;
+    font-weight: bold!important;
+  }
+
+  .rdt_TableRow:nth-child(odd){
+    background-color: #3C3C3C;
+    color: white;
+  }
+  
+  .rdt_TableRow:nth-child(even){
+    background-color: #272320;
+    color: white;
+  }
+
+  .searchField:focus{
+    outline: none
+  }
