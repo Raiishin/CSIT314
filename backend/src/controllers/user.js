@@ -152,9 +152,36 @@ const update = async (req, res, next) => {
   await setDoc(userRef, updatedUser);
 
   // Retrieve the updated user
-  const userAfterUpdate = await getDoc(userRef);
+  const userData = await getDoc(userRef);
 
-  return res.json(userAfterUpdate.data());
+  let returnObject;
+
+  if (userData.type === userTypeEnum.CUSTOMER) {
+    const customer = new Customer(
+      id,
+      userData.name,
+      userData.email,
+      userData.phoneNumber,
+      userData.walletBalance,
+      userData.loyaltyPoints
+    );
+
+    returnObject = customer;
+  } else if (userData.type === userTypeEnum.STAFF) {
+    const staff = new Staff(id, userData.name, userData.email, userData.phoneNumber);
+    returnObject = staff;
+  } else if (userData.type === userTypeEnum.MANAGEMENT) {
+    const management = new Management(id, userData.name, userData.email, userData.phoneNumber);
+    returnObject = management;
+  } else if (userData.type === userTypeEnum.ADMIN) {
+    const admin = new Admin(id, userData.name, userData.email, userData.phoneNumber);
+    returnObject = admin;
+  } else {
+    const user = new User(id, userData.name, userData.email, userData.phoneNumber);
+    returnObject = user;
+  }
+
+  return res.json(returnObject);
 };
 
 export default {
