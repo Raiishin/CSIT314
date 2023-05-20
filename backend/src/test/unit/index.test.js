@@ -2,7 +2,8 @@ import {
   saltPassword,
   formatDate,
   validatePhoneNumber,
-  generateSeatMap
+  generateSeatMap,
+  generateBookingId
 } from '../../library/index.js';
 
 test('Salt passsword', async () => {
@@ -358,4 +359,12 @@ test('Generate seat map', async () => {
   },
 ]
 `);
+});
+
+test('Generate unique booking ID', async () => {
+  const bookingId1 = generateBookingId(new Date());
+  const bookingId2 = generateBookingId(new Date());
+
+  // Should be unique, so it shouldn't equal
+  expect(bookingId1 === bookingId2).toMatchInlineSnapshot(`false`);
 });

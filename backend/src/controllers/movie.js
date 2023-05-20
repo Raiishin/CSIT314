@@ -7,10 +7,11 @@ import {
   query,
   where,
   doc,
+  addDoc,
   getDoc
 } from 'firebase/firestore/lite';
 import config from '../config/index.js';
-import { formatDate, generateSeatMap } from '../library/index.js';
+import { formatDate, generateSeatMap, generateBookingId } from '../library/index.js';
 import { startOfDay } from 'date-fns';
 
 // Initialize Firebase
@@ -130,8 +131,11 @@ const getSeatmap = async (req, res) => {
   const searchQuery = query(seatLogs, where('movieShowtimeId', '==', movieShowtimeId));
   const seatLogsData = await getDocs(searchQuery);
 
-  const seatLogsMappedData =
-    seatLogsData.docs.length == 0 ? [] : seatLogsData.data().map(log => log.data());
+  const seatLogsMappedData = [];
+
+  if (seatLogsData.docs.length !== 0) {
+    seatLogsData.forEach(log => seatLogsMappedData.push(log.data()));
+  }
 
   const seatMap = generateSeatMap(seatLogsMappedData);
 
@@ -141,9 +145,72 @@ const getSeatmap = async (req, res) => {
   return res.json({ seatMap, date: formattedShowtimeDate, showtime: movieShowtimeData.showtime });
 };
 
+const getBooking = async (req, res) => {
+  const { bookingId } = req.query;
+
+  const searchQuery = query(seatLogs, where('bookingId', '==', bookingId));
+  const seatLogsData = await getDocs(searchQuery);
+
+  // Error handling if there are no results
+  if (seatLogsData.docs.length == 0) {
+    return res.json({ message: 'No seats were booked with this booking ID' });
+  }
+
+  const seatLogsArr = [];
+  let movieShowtimeId = '';
+
+  seatLogsData.forEach(seatLog => {
+    const data = seatLog.data();
+
+    if (movieShowtimeId === '') movieShowtimeId = data.movieShowtimeId;
+
+    seatLogsArr.push(data.row + data.number);
+  });
+
+  // Get movieShowtime information
+  const movieShowtimeRef = doc(db, 'movieShowtimes', movieShowtimeId);
+  const movieShowtime = await getDoc(movieShowtimeRef);
+  const movieShowtimeData = movieShowtime.data();
+
+  const showtimeDate = new Date(movieShowtimeData.date * 1000);
+  const formattedShowtimeDate = formatDate(showtimeDate);
+
+  return res.json({
+    seats: seatLogsArr,
+    date: formattedShowtimeDate,
+    showtime: movieShowtimeData.showtime
+  });
+};
+
+const purchaseSeats = async (req, res) => {
+  const { movieShowtimeId, seats } = req.body;
+  console.log({ movieShowtimeId, seats });
+
+  // Generate Booking ID
+  const bookingId = generateBookingId(new Date());
+
+  seats.map(async seat => {
+    const insertObj = {
+      row: seat.seatRow,
+      number: seat.seatNumber,
+      movieShowtimeId,
+      bookingId,
+      status: 'sold'
+    };
+
+    console.log(insertObj);
+
+    await addDoc(seatLogs, insertObj);
+  });
+
+  return res.json({ bookingId });
+};
+
 export default {
   index,
   view,
   getMovieShowtimes,
-  getSeatmap
+  getSeatmap,
+  getBooking,
+  purchaseSeats
 };

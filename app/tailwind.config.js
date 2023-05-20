@@ -9,7 +9,11 @@ module.exports = {
         'light-blue': '#3B82F6',
         brown: '#AC8B54',
         'light-brown': '#4C453C',
-        'dark-brown': '#272320'
+        'dark-brown': '#272320',
+        'light-gray': '#d1d5db',
+        'dark-gray': '#4b5563',
+        red: '#ef4444',
+        cyan: '#06b6d4'
       }
     }
   },
