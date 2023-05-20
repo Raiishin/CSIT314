@@ -54,3 +54,11 @@ export const generateSeatMap = seatLogs => {
 
   return seatMap;
 };
+
+export const generateBookingId = date => {
+  const timestamp = date.getTime(); // Get current timestamp
+  const random = Math.floor(Math.random() * 10000); // Generate a random number between 0 and 9999
+  const bookingID = `${timestamp}-${random}`; // Combine timestamp and random number
+
+  return bookingID;
+};

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FaArrowLeft, FaChair } from 'react-icons/fa';
 import { useParams } from 'react-router-dom';
 
-import { getSeatmap } from '../api/movies';
+import { getSeatmap, purchaseSeats } from '../api/movies';
 
 import VisaLogo from '../assets/visa.png';
 import MastercardLogo from '../assets/mastercard.png';
@@ -28,13 +28,10 @@ const SeatSelectionPage = () => {
 
   const params = useParams();
 
-  const handleFoodOptionChange = event => {
-    setFoodOption(event.target.id);
-    // can also use e.target.id
-  };
-
-  const handleReadyForPayment = () => {
-    setShowPaymentPart(true);
+  const handleReadyForPayment = async () => {
+    const response = await purchaseSeats(params.id, selectedSeats);
+    console.log(response);
+    // setShowPaymentPart(true);
   };
 
   useEffect(() => {
@@ -84,6 +81,7 @@ const SeatSelectionPage = () => {
       });
     }
   };
+
   const totalSelectedSeats = selectedSeats.length;
 
   useEffect(() => {
@@ -122,6 +120,7 @@ const SeatSelectionPage = () => {
   const handlePaymentMethodSelection = paymentMethod => {
     setSelectedPaymentMethod(paymentMethod);
   };
+
   const handleSubmit = event => {
     event.preventDefault();
     // TODO: Handle payment logic based on selected payment method
@@ -243,7 +242,7 @@ const SeatSelectionPage = () => {
       <div className="bg-white shadow-md py-4">
         <div className="container mx-auto flex justify-between items-center px-4">
           <div className="flex items-center">
-            <FaArrowLeft className="text-gray-600 mr-2" />
+            <FaArrowLeft className="text-dark-gray mr-2" />
             {/* back to view movie details page */}
             <span className="text-gray-400 hover:text-gray-800 cursor-pointer">Back</span>
           </div>
@@ -255,8 +254,8 @@ const SeatSelectionPage = () => {
       <div className="flex flex-row place-content-center justify-around">
         <div className="flex flex-col items-center">
           <div className="flex flex-col items-center">
-            <p className="text-gray-600 font-bold">Date: {selectedDate}</p>
-            <p className="text-gray-600 font-bold">Time: {selectedTime}</p>
+            <p className="text-dark-gray font-bold">Date: {selectedDate}</p>
+            <p className="text-dark-gray font-bold">Time: {selectedTime}</p>
           </div>
           <h1 className="text-3xl font-bold mb-4">Movie Title</h1>
           <img src="https://via.placeholder.com/500x500" alt="Movie Poster" />
@@ -267,7 +266,7 @@ const SeatSelectionPage = () => {
             <div className="bg-gray-200 py-0 mt-8 flex justify-center items-center mb-4">
               <div className="w-1/2 flex justify-center items-center">
                 <div className="w-80 h-10 bg-white border border-cyan-400 flex justify-center items-center">
-                  <p className="text-gray-600 text-lg font-bold">Screen</p>
+                  <p className="text-dark-gray text-lg font-bold">Screen</p>
                 </div>
               </div>
             </div>
@@ -281,10 +280,12 @@ const SeatSelectionPage = () => {
                     className={`flex justify-center items-center w-8 h-8 m-1 cursor-pointer ${
                       seat.status.toLowerCase() === 'available' &&
                       isSeatSelected(seat.seatRow, seat.seatNumber)
-                        ? 'bg-cyan-200 text-cyan-500'
+                        ? 'bg-cyan'
                         : seat.status.toLowerCase() === 'unavailable'
-                        ? 'bg-red-500'
-                        : 'bg-gray-300'
+                        ? 'bg-red'
+                        : seat.status.toLowerCase() === 'sold'
+                        ? 'bg-dark-gray'
+                        : 'bg-light-gray'
                     }`}
                     onClick={() => handleSeatSelection(seat.seatRow, seat.seatNumber)}
                     role="button"
@@ -300,23 +301,27 @@ const SeatSelectionPage = () => {
 
               <div className="flex justify-center mb-4">
                 <div className="flex items-center mx-4">
-                  <div className="w-4 h-4 bg-gray-300 rounded-full"></div>
+                  <div className="w-4 h-4 bg-light-gray rounded-full"></div>
                   <span className="ml-2">Available</span>
                 </div>
                 <div className="flex items-center mx-4">
-                  <div className="w-4 h-4 bg-cyan-500 rounded-full"></div>
+                  <div className="w-4 h-4 bg-cyan rounded-full"></div>
                   <span className="ml-2">Selected</span>
                 </div>
                 <div className="flex items-center mx-4">
-                  <div className="w-4 h-4 bg-red-500 rounded-full"></div>
+                  <div className="w-4 h-4 bg-red rounded-full"></div>
                   <span className="ml-2">Unavailable</span>
+                </div>
+                <div className="flex items-center mx-4">
+                  <div className="w-4 h-4 bg-dark-gray rounded-full"></div>
+                  <span className="ml-2">Sold</span>
                 </div>
               </div>
 
               <div className="bg-gray-200 w-full">
                 <h2 className="text-xl mb-4">Selected Seats:</h2>
                 <div className="flex flex-wrap justify-center">
-                  {selectedSeats.length === 0 && <p className="text-gray-600">None</p>}
+                  {selectedSeats.length === 0 && <p className="text-dark-gray">None</p>}
                   {selectedSeats.map((seat, index) => (
                     <div
                       key={index}
@@ -433,11 +438,11 @@ const SeatSelectionPage = () => {
                       name="foodOption"
                       value=""
                       checked={foodOption === 'none'}
-                      onChange={handleFoodOptionChange}
+                      onChange={e => setFoodOption(e.target.id)}
                     />
                     <label
                       className={`flex flex-col p-4 border-2 border-gray-400 cursor-pointer ${
-                        foodOption === 'none' ? 'bg-gray-300' : ''
+                        foodOption === 'none' ? 'bg-light-gray' : ''
                       }`}
                       htmlFor="none"
                       style={{ width: '100px', height: '225px' }}
@@ -454,11 +459,11 @@ const SeatSelectionPage = () => {
                       name="foodOption"
                       value="popcorn_drinks"
                       checked={foodOption === 'popcorn'}
-                      onChange={handleFoodOptionChange}
+                      onChange={e => setFoodOption(e.target.id)}
                     />
                     <label
                       className={`flex flex-col p-4 border-2 border-gray-400 cursor-pointer ${
-                        foodOption === 'popcorn' ? 'bg-gray-300' : ''
+                        foodOption === 'popcorn' ? 'bg-light-gray' : ''
                       }`}
                       htmlFor="popcorn"
                       style={{ width: '100px', height: '225px' }}
@@ -481,11 +486,11 @@ const SeatSelectionPage = () => {
                         name="foodOption"
                         value="nachos_drinks"
                         checked={foodOption === 'nachos'}
-                        onChange={handleFoodOptionChange}
+                        onChange={e => setFoodOption(e.target.id)}
                       />
                       <label
                         className={`flex flex-col p-4 border-2 border-gray-400 cursor-pointer ${
-                          foodOption === 'nachos' ? 'bg-gray-300' : ''
+                          foodOption === 'nachos' ? 'bg-light-gray' : ''
                         }`}
                         htmlFor="nachos"
                         style={{ width: '100px', height: '225px' }}
@@ -509,11 +514,11 @@ const SeatSelectionPage = () => {
                         name="foodOption"
                         value="FamilyCombo"
                         checked={foodOption === 'FamilyCombo'}
-                        onChange={handleFoodOptionChange}
+                        onChange={e => setFoodOption(e.target.id)}
                       />
                       <label
                         className={`flex flex-col p-4 border-2 border-gray-400 cursor-pointer ${
-                          foodOption === 'FamilyCombo' ? 'bg-gray-300' : ''
+                          foodOption === 'FamilyCombo' ? 'bg-light-gray' : ''
                         }`}
                         htmlFor="FamilyCombo"
                         style={{ width: '100px', height: '225px' }}
@@ -540,7 +545,7 @@ const SeatSelectionPage = () => {
 
             <div>
               <button
-                className="mt-6 bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2 px-8 rounded focus:outline-none focus:shadow-outline border-2 border-gray-300"
+                className="mt-6 bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2 px-8 rounded focus:outline-none focus:shadow-outline border-2 border-light-gray"
                 //   disabled={!selectedDate || !selectedTheater || !selectedTime}
                 onClick={handleReadyForPayment}
               >
@@ -614,7 +619,7 @@ const SeatSelectionPage = () => {
                             Card Number
                           </label>
                           <input
-                            className="hover:bg-cyan-50 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:shadow-outline"
+                            className="hover:bg-cyan-50 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-cyan focus:ring-1 focus:ring-cyan focus:shadow-outline"
                             id="cardNumber"
                             type="text"
                             placeholder="Enter card number"
@@ -631,7 +636,7 @@ const SeatSelectionPage = () => {
                             Card Holder
                           </label>
                           <input
-                            className="hover:bg-cyan-50 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:shadow-outline"
+                            className="hover:bg-cyan-50 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-cyan focus:ring-1 focus:ring-cyan focus:shadow-outline"
                             id="cardHolder"
                             type="text"
                             placeholder="Enter card holder name"
@@ -649,7 +654,7 @@ const SeatSelectionPage = () => {
                               Expiration Date
                             </label>
                             <input
-                              className="hover:bg-cyan-50 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:shadow-outline"
+                              className="hover:bg-cyan-50 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-cyan focus:ring-1 focus:ring-cyan focus:shadow-outline"
                               id="expiration"
                               type="text"
                               placeholder="MM/YYYY"
@@ -666,7 +671,7 @@ const SeatSelectionPage = () => {
                               CVV
                             </label>
                             <input
-                              className="hover:bg-cyan-50 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:shadow-outline"
+                              className="hover:bg-cyan-50 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-cyan focus:ring-1 focus:ring-cyan focus:shadow-outline"
                               id="cvv"
                               type="text"
                               placeholder="Enter CVV"
@@ -678,7 +683,7 @@ const SeatSelectionPage = () => {
                         </div>
                         <div className="mb-6">
                           <button
-                            className="bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline group-invalid:pointer-events-none group-invalid:opacity-30"
+                            className="bg-cyan hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline group-invalid:pointer-events-none group-invalid:opacity-30"
                             type="submit"
                             onClick={handleSubmit}
                           >
