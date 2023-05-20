@@ -12,6 +12,7 @@ import ResetPassword from './components/ResetPassword';
 import MovieDetails from './components/MovieDetails';
 import ManageMovies from './components/ManageMovies';
 import ProfilePage from './components/ProfilePage';
+import SeatSelectionPage from './components/SeatSelectionPage';
 
 const App = () => {
   return (
@@ -26,10 +27,8 @@ const App = () => {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/movie/:id" element={<MovieDetails />} />
         <Route path="/profile" element={<ProfilePage />} />
-
-        {/* <Route path="/bookseats" element={<BookSeats />} /> */}
-        {/* <Route path="/TestSeat" element={<TestSeat />} /> */}
         <Route path="/manage-movies" element={<ManageMovies />} />
+        <Route path="/tickets/:id" element={<SeatSelectionPage />} />
       </Routes>
     </div>
   );

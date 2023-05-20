@@ -1,14 +1,24 @@
 // Movie Controller
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, getDocs, query, where } from 'firebase/firestore/lite';
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  query,
+  where,
+  doc,
+  getDoc
+} from 'firebase/firestore/lite';
 import config from '../config/index.js';
-import { formatDate } from '../library/index.js';
+import { formatDate, generateSeatMap } from '../library/index.js';
+import { startOfDay } from 'date-fns';
 
 // Initialize Firebase
 const app = initializeApp(config.firebaseConfig);
 const db = getFirestore(app);
 const movies = collection(db, 'movies');
 const movieShowtimes = collection(db, 'movieShowtimes');
+const seatLogs = collection(db, 'seatLogs');
 
 const index = async (req, res) => {
   const moviesSnapshot = await getDocs(movies);
@@ -44,13 +54,13 @@ const view = async (req, res) => {
 
 const getMovieShowtimes = async (req, res) => {
   const { cinemaName, movieId } = req.query;
-  const now = new Date();
+  const now = startOfDay(new Date()).getTime() / 1000;
 
   const searchQuery = query(
     movieShowtimes,
     where('cinemaName', '==', cinemaName),
-    where('movieId', '==', movieId)
-    // where('date', '>=', now)
+    where('movieId', '==', movieId),
+    where('date', '>=', now) // Does not work now
   );
 
   const movieShowtimeData = await getDocs(searchQuery);
@@ -65,10 +75,14 @@ const getMovieShowtimes = async (req, res) => {
   movieShowtimeData.forEach(item => {
     const movieShowtime = item.data();
 
-    const showtimeDate = new Date(movieShowtime.date.seconds * 1000);
+    const showtimeDate = new Date(movieShowtime.date * 1000);
     const formattedShowtimeDate = formatDate(showtimeDate);
 
-    dateTimingObj.push({ date: formattedShowtimeDate, showtime: movieShowtime.showtime });
+    dateTimingObj.push({
+      date: formattedShowtimeDate,
+      showtime: movieShowtime.showtime,
+      id: item.id
+    });
   });
 
   // Create an empty object to store unique dates as keys and corresponding timings as values
@@ -76,15 +90,16 @@ const getMovieShowtimes = async (req, res) => {
 
   // Iterate over the objects and populate the dateTimingsMap
   dateTimingObj.forEach(obj => {
-    const { date, showtime } = obj;
+    const { date, showtime, id } = obj;
 
+    const timingObject = { showtime, id };
     // Check if the date already exists in the dateTimingsMap
     if (dateTimingsMap[date]) {
       // If the date exists, push the showtime to the corresponding array
-      dateTimingsMap[date].push(showtime);
+      dateTimingsMap[date].push(timingObject);
     } else {
       // If the date doesn't exist, create a new array with the showtime
-      dateTimingsMap[date] = [showtime];
+      dateTimingsMap[date] = [timingObject];
     }
   });
 
@@ -94,7 +109,7 @@ const getMovieShowtimes = async (req, res) => {
   // Create the timings array corresponding to the dates
   const timings = dates.map(date => {
     const sortedTimings = dateTimingsMap[date].sort(
-      (a, b) => parseInt(a.substring(0, 2)) - parseInt(b.substring(0, 2))
+      (a, b) => parseInt(a.showtime.substring(0, 2)) - parseInt(b.showtime.substring(0, 2))
     );
 
     return sortedTimings;
@@ -104,25 +119,31 @@ const getMovieShowtimes = async (req, res) => {
   return res.json({ dates, timings });
 };
 
-const getSeats = async (req, res) => {
-  const { cinemaId, movieId, showtimeId, date } = req.query;
+const getSeatmap = async (req, res) => {
+  const { movieShowtimeId } = req.query;
 
-  // cinemaId, movieId, showtimeId, date = used to get movieShowtimes Id
+  // Get movieShowtime information
+  const movieShowtimeRef = doc(db, 'movieShowtimes', movieShowtimeId);
+  const movieShowtime = await getDoc(movieShowtimeRef);
+  const movieShowtimeData = movieShowtime.data();
 
-  // movieShowtimesId = Query db for all the seats
+  const searchQuery = query(seatLogs, where('movieShowtimeId', '==', movieShowtimeId));
+  const seatLogsData = await getDocs(searchQuery);
 
-  // Fixed size for all halls
+  const seatLogsMappedData =
+    seatLogsData.docs.length == 0 ? [] : seatLogsData.data().map(log => log.data());
 
-  const rows = 6;
-  const seats = 10;
+  const seatMap = generateSeatMap(seatLogsMappedData);
 
-  for (let i = 0; i < rows; i++) {
-    for (let j = 0; j < seats; j++) {}
-  }
+  const showtimeDate = new Date(movieShowtimeData.date * 1000);
+  const formattedShowtimeDate = formatDate(showtimeDate);
+
+  return res.json({ seatMap, date: formattedShowtimeDate, showtime: movieShowtimeData.showtime });
 };
 
 export default {
   index,
   view,
-  getMovieShowtimes
+  getMovieShowtimes,
+  getSeatmap
 };

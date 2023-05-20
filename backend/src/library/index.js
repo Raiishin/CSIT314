@@ -35,3 +35,22 @@ export const validatePhoneNumber = phoneNumber => {
   const pattern = /^[89]\d{7}$/;
   return pattern.test(phoneNumber);
 };
+
+export const generateSeatMap = seatLogs => {
+  const seatMap = [];
+
+  for (let row = 1; row <= 6; row++) {
+    const rowLetter = String.fromCharCode(64 + row);
+    for (let number = 1; number <= 10; number++) {
+      const seatLog = seatLogs.find(log => log.number === number && log.row === rowLetter);
+
+      seatMap.push({
+        seatRow: rowLetter,
+        seatNumber: number,
+        status: seatLog ? seatLog.status : 'available'
+      });
+    }
+  }
+
+  return seatMap;
+};
