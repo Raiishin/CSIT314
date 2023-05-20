@@ -24,6 +24,13 @@ export const getMovieShowtimes = async (movieId, cinemaName) => {
   return responseJSON;
 };
 
+export const getSeatmap = async movieShowtimeId => {
+  const response = await fetch(`${backendEndpoint}/seatmap?movieShowtimeId=${movieShowtimeId}`);
+  const responseJSON = await response.json();
+
+  return responseJSON;
+};
+
 export const getReview = async id => {
   const response = await fetch(`https://imdb-api.com/en/API/Reviews/${'k_10m052oa'}/${id}`);
   const responseJSON = await response.json();

@@ -28,7 +28,8 @@ const ResetPassword = () => {
       <h1 className="font-mono text-cyan-600 text-3xl font-large">Reset Password</h1>
       <form
         className="bg-white p-8 rounded-lg shadow-md max-w-sm w-full group"
-        onSubmit={handleSubmit}>
+        onSubmit={handleSubmit}
+      >
         <div className="mb-4">
           <label className="text-left block text-gray-700 font-bold mb-2" htmlFor="email">
             Enter the email address associated with your account:
@@ -50,27 +51,31 @@ const ResetPassword = () => {
         {successMessage && (
           <div
             className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4"
-            role="alert">
+            role="alert"
+          >
             <p className="font-bold">{successMessage}</p>
           </div>
         )}
         {errorMessage && (
           <div
             className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4"
-            role="alert">
+            role="alert"
+          >
             <p className="font-bold">{errorMessage}</p>
           </div>
         )}
         <div className="items-center justify-between">
           <button
             className="bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline group-invalid:pointer-events-none group-invalid:opacity-30"
-            type="submit">
+            type="submit"
+          >
             Reset Password
           </button>
         </div>
         <div
           className="text-cyan-500 hover:text-cyan-700 text-lg cursor-pointer"
-          onClick={() => navigate('/login')}>
+          onClick={() => navigate('/login')}
+        >
           Back to Login
         </div>
       </form>

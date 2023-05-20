@@ -25,6 +25,7 @@ router.post('/updateUser', UserController.update);
 router.get('/movies', MovieController.index);
 router.get('/movie', MovieController.view);
 router.get('/movieShowtimes', MovieController.getMovieShowtimes);
+router.get('/seatmap', MovieController.getSeatmap);
 
 router.get('/management/cinemas', ManagementController.getCinemas);
 router.get('/management/cinemaHalls', ManagementController.getCinemaHalls);

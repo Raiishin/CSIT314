@@ -2,6 +2,7 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, getDocs, addDoc, query, where } from 'firebase/firestore/lite';
 import config from '../config/index.js';
+import { startOfDay } from 'date-fns';
 
 // Initialize Firebase
 const app = initializeApp(config.firebaseConfig);
@@ -41,7 +42,7 @@ const createMovieShowtime = async (req, res, next) => {
   try {
     const { cinemaName, hallId, movieId, showtime, date } = req.body;
 
-    const formattedDate = new Date(date);
+    const formattedDate = startOfDay(new Date(date)).getTime() / 1000;
     const movieShowtimes = collection(db, 'movieShowtimes');
 
     // Validate if this showtime is already taken

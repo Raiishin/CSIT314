@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { getMovie, getReview, getMovieShowtimes } from '../api/movies.js';
 import { getCinemas } from '../api/management.js';
 import Button from './Button';
+import { useNavigate } from 'react-router-dom';
 
 const MovieDetails = () => {
   const [movie, setMovie] = useState({});
@@ -18,6 +19,8 @@ const MovieDetails = () => {
   const [timings, setTimings] = useState([]);
 
   const [selectedTiming, setSelectedTiming] = useState('');
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const initializePageData = async () => {
@@ -131,8 +134,10 @@ const MovieDetails = () => {
                     {timings.map(timing => (
                       <Button
                         className={'bg-white m-1 p-1 rounded-lg w-1/2 self-center'}
-                        text={timing}
-                        onClick={() => {}}
+                        text={timing.showtime}
+                        onClick={() => {
+                          navigate(`/tickets/${timing.id}`);
+                        }}
                       />
                     ))}
                   </div>
