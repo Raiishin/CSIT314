@@ -1,12 +1,12 @@
+import config from '../config/index';
 import { saltPassword } from '../library/index.js';
 
-const backendEndpoint = 'http://localhost:5001';
-// const backendEndpoint = 'https://csit314-project-backend.onrender.com';
-
-export const userLogin = async (email, password) => {
+export const loginUser = async (email, password) => {
   const saltedPassword = saltPassword(password);
 
-  const response = await fetch(`${backendEndpoint}/user?email=${email}&password=${saltedPassword}`);
+  const response = await fetch(
+    `${config.backendEndpoint}/user?email=${email}&password=${saltedPassword}`
+  );
   const responseJSON = await response.json();
 
   return responseJSON;
@@ -15,7 +15,7 @@ export const userLogin = async (email, password) => {
 export const createUser = async (name, email, password, phoneNumber) => {
   const saltedPassword = saltPassword(password);
 
-  const response = await fetch(`${backendEndpoint}/createUser`, {
+  const response = await fetch(`${config.backendEndpoint}/createUser`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ name, email, password: saltedPassword, phoneNumber })
@@ -29,7 +29,7 @@ export const createUser = async (name, email, password, phoneNumber) => {
 export const updateUser = async (id, password, phoneNumber) => {
   const saltedPassword = saltPassword(password);
 
-  const response = await fetch(`${backendEndpoint}/updateUser`, {
+  const response = await fetch(`${config.backendEndpoint}/updateUser`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ id, password: saltedPassword, phoneNumber })
