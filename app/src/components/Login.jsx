@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { userLogin } from '../api/user.js';
+import { loginUser } from '../api/user.js';
 import useGlobalStore from '../store/globalStore';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,7 +12,7 @@ const Login = () => {
   const handleSubmit = async e => {
     e.preventDefault();
 
-    const response = await userLogin(email, password);
+    const response = await loginUser(email, password);
 
     // Will return a message if an error occurred
     if (response.message) {
@@ -96,14 +96,14 @@ const Login = () => {
         </div>
         <div className="items-center justify-between">
           <button
-            className="bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2 px-8 rounded focus:outline-none focus:shadow-outline border-2 border-gray-300 group-invalid:pointer-events-none group-invalid:opacity-30"
+            className="bg-cyan hover:bg-dark-cyan text-white font-bold py-2 px-8 rounded focus:outline-none focus:shadow-outline border-2 border-gray-300 group-invalid:pointer-events-none group-invalid:opacity-30"
             type="submit"
           >
             Sign In
           </button>
         </div>
         <div
-          className="cursor-pointer text-cyan-600 hover:text-blue"
+          className="cursor-pointer text-cyan hover:text-blue"
           onClick={() => navigate('/reset-password')}
         >
           Forgot your password?

@@ -32,105 +32,93 @@ const index = async (req, res) => {
   return res.json({ usersData });
 };
 
-const view = async (req, res, next) => {
-  try {
-    const { password, email } = req.query;
+const view = async (req, res) => {
+  const { password, email } = req.query;
 
-    const searchQuery = query(
-      users,
-      where('password', '==', password),
-      where('email', '==', email)
-    );
-    const usersData = await getDocs(searchQuery);
+  const searchQuery = query(users, where('password', '==', password), where('email', '==', email));
+  const usersData = await getDocs(searchQuery);
 
-    let returnObject;
+  let returnObject;
 
-    // Error handling if there are no results
-    if (usersData.docs.length == 0) {
-      return res.json({ message: 'Incorrect password or no such user exists' });
+  // Error handling if there are no results
+  if (usersData.docs.length == 0) {
+    return res.json({ message: 'Incorrect password or no such user exists' });
+  }
+
+  usersData.forEach(item => {
+    const data = item.data();
+
+    if (data.type === userTypeEnum.CUSTOMER) {
+      const customer = new Customer(
+        item.id,
+        data.name,
+        data.email,
+        data.phoneNumber,
+        data.walletBalance,
+        data.loyaltyPoints
+      );
+
+      returnObject = customer;
+    } else if (data.type === userTypeEnum.STAFF) {
+      const staff = new Staff(item.id, data.name, data.email, data.phoneNumber);
+      returnObject = staff;
+    } else if (data.type === userTypeEnum.MANAGEMENT) {
+      const management = new Management(item.id, data.name, data.email, data.phoneNumber);
+      returnObject = management;
+    } else if (data.type === userTypeEnum.ADMIN) {
+      const admin = new Admin(item.id, data.name, data.email, data.phoneNumber);
+      returnObject = admin;
+    } else {
+      const user = new User(item.id, data.name, data.email, data.phoneNumber);
+      returnObject = user;
     }
+  });
 
-    usersData.forEach(item => {
-      const data = item.data();
-
-      if (data.type === userTypeEnum.CUSTOMER) {
-        const customer = new Customer(
-          item.id,
-          data.name,
-          data.email,
-          data.phoneNumber,
-          data.walletBalance,
-          data.loyaltyPoints
-        );
-
-        returnObject = customer;
-      } else if (data.type === userTypeEnum.STAFF) {
-        const staff = new Staff(item.id, data.name, data.email, data.phoneNumber);
-        returnObject = staff;
-      } else if (data.type === userTypeEnum.MANAGEMENT) {
-        const management = new Management(item.id, data.name, data.email, data.phoneNumber);
-        returnObject = management;
-      } else if (data.type === userTypeEnum.ADMIN) {
-        const admin = new Admin(item.id, data.name, data.email, data.phoneNumber);
-        returnObject = admin;
-      } else {
-        const user = new User(item.id, data.name, data.email, data.phoneNumber);
-        returnObject = user;
-      }
-    });
-
-    return res.json(returnObject);
-  } catch (err) {
-    next(err);
-  }
+  return res.json(returnObject);
 };
 
-const create = async (req, res, next) => {
-  try {
-    const { name, password, email, phoneNumber } = req.body;
+const create = async (req, res) => {
+  const { name, password, email, phoneNumber } = req.body;
 
-    if (!validatePhoneNumber(phoneNumber))
-      return res.json({ message: 'This phone number is invalid' });
+  if (!validatePhoneNumber(phoneNumber))
+    return res.json({ message: 'This phone number is invalid' });
 
-    // Validate if user already exists using email
-    const searchQuery = query(users, where('email', '==', email));
-    const usersData = await getDocs(searchQuery);
+  // Validate if user already exists using email
+  const searchQuery = query(users, where('email', '==', email));
+  const usersData = await getDocs(searchQuery);
 
-    // Error handling if email already exists
-    if (usersData.docs.length !== 0) return res.json({ message: 'This email already exists' });
+  // Error handling if email already exists
+  if (usersData.docs.length !== 0) return res.json({ message: 'This email already exists' });
 
-    // Create new user, default to being a customer
-    const resp = await addDoc(users, {
-      name,
-      password,
-      email,
-      phoneNumber,
-      type: userTypeEnum.CUSTOMER,
-      walletBalance: 0,
-      loyaltyPoints: 0
-    });
+  // Create new user, default to being a customer
+  const resp = await addDoc(users, {
+    name,
+    password,
+    email,
+    phoneNumber,
+    type: userTypeEnum.CUSTOMER,
+    walletBalance: 0,
+    loyaltyPoints: 0
+  });
 
-    const userRef = doc(db, 'users', resp.id);
-    const user = await getDoc(userRef);
+  const userRef = doc(db, 'users', resp.id);
+  const user = await getDoc(userRef);
 
-    const data = user.data();
+  const data = user.data();
 
-    const customer = new Customer(
-      resp.id,
-      data.name,
-      data.email,
-      data.phoneNumber,
-      data.walletBalance,
-      data.loyaltyPoints
-    );
+  const customer = new Customer(
+    resp.id,
+    data.name,
+    data.email,
+    data.phoneNumber,
+    data.walletBalance,
+    data.loyaltyPoints
+  );
 
-    return res.json(customer);
-  } catch (err) {
-    next(err);
-  }
+  return res.json(customer);
 };
 
-const update = async (req, res, next) => {
+const update = async (req, res) => {
   const { id, phoneNumber, password } = req.body;
 
   if (!validatePhoneNumber(phoneNumber))

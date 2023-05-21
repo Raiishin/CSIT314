@@ -13,7 +13,8 @@ module.exports = {
         'light-gray': '#d1d5db',
         'dark-gray': '#4b5563',
         red: '#ef4444',
-        cyan: '#06b6d4'
+        cyan: '#06b6d4',
+        'dark-cyan': '#0e7490'
       }
     }
   },
