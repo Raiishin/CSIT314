@@ -135,7 +135,7 @@ const ProfilePage = () => {
 
             <div className="flex justify-end">
               <button
-                className={`bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded mr-2 `}
+                className={`bg-cyan hover:bg-dark-cyan text-white font-bold py-2 px-4 rounded mr-2 `}
                 type="submit"
               >
                 Save
@@ -173,7 +173,7 @@ const ProfilePage = () => {
 
           <div className="flex justify-end">
             <button
-              className="bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded"
+              className="bg-cyan hover:bg-dark-cyan text-white font-bold py-2 px-4 rounded"
               onClick={() => setIsEditing(true)}
             >
               Edit

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FaArrowLeft, FaChair } from 'react-icons/fa';
-import { useParams } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 
 import { getSeatmap } from '../api/movies';
 
@@ -9,6 +9,7 @@ import PopcornIcon from '../assets/popcorn.png';
 import NachosIcon from '../assets/nachos.png';
 import FamilyComboIcon from '../assets/familyCombo.jpg';
 import useGlobalStore from '../store/globalStore';
+import { useNavigate } from 'react-router-dom';
 
 import Payment from './Payment';
 
@@ -28,6 +29,10 @@ const SeatSelectionPage = () => {
   const params = useParams();
 
   const userId = useGlobalStore(state => state.userId);
+  const selectedMovieTitle = useGlobalStore(state => state.selectedMovieTitle);
+  const selectedMovieImageUrl = useGlobalStore(state => state.selectedMovieImageUrl);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchSeats = async () => {
@@ -146,8 +151,12 @@ const SeatSelectionPage = () => {
         <div className="container mx-auto flex justify-between items-center px-4">
           <div className="flex items-center">
             <FaArrowLeft className="text-dark-gray mr-2" />
-            {/* back to view movie details page */}
-            <span className="text-gray-400 hover:text-gray-800 cursor-pointer">Back</span>
+            <span
+              className="text-gray-400 hover:text-gray-800 cursor-pointer"
+              onClick={() => navigate(`/`)}
+            >
+              Back
+            </span>
           </div>
         </div>
       </div>
@@ -160,8 +169,8 @@ const SeatSelectionPage = () => {
             <p className="text-dark-gray font-bold">Date: {selectedDate}</p>
             <p className="text-dark-gray font-bold">Time: {selectedTime}</p>
           </div>
-          <h1 className="text-3xl font-bold mb-4">Movie Title</h1>
-          <img src="https://via.placeholder.com/500x500" alt="Movie Poster" />
+          <h1 className="text-3xl font-bold mb-4">{selectedMovieTitle}</h1>
+          <img src={selectedMovieImageUrl} alt="Movie Poster" width={300} height={300} />
         </div>
 
         {showRestOfPage && (
