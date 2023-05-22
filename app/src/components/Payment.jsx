@@ -219,17 +219,18 @@ const Payment = ({ totalCost, seats, foodItem }) => {
               </div>
             </form>
           </div>
-          <div className="m-4">
-            <button
-              className="bg-cyan hover:bg-dark-cyan text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline group-invalid:pointer-events-none group-invalid:opacity-30"
-              type="submit"
-              onClick={handleSubmit}
-            >
-              Submit
-            </button>
-          </div>
         </div>
       )}
+
+      <div className="m-4">
+        <button
+          className="bg-cyan hover:bg-dark-cyan text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline group-invalid:pointer-events-none group-invalid:opacity-30"
+          type="submit"
+          onClick={handleSubmit}
+        >
+          Submit
+        </button>
+      </div>
     </div>
   );
 };
