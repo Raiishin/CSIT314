@@ -14,6 +14,7 @@ import MovieDetails from './components/MovieDetails';
 import ManageMovies from './components/ManageMovies';
 import ProfilePage from './components/ProfilePage';
 import SeatSelectionPage from './components/SeatSelectionPage';
+import ManagementReport from './components/ManagementReport';
 
 const App = () => {
   return (
@@ -29,6 +30,7 @@ const App = () => {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/movie/:id" element={<MovieDetails />} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/report" element={<ManagementReport />} />
         <Route path="/manage-movies" element={<ManageMovies />} />
         <Route path="/tickets/:id" element={<SeatSelectionPage />} />
       </Routes>

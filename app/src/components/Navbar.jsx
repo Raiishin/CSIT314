@@ -47,6 +47,7 @@ const Navbar = props => {
           {accessLevel >= userTypeEnum.MANAGEMENT && (
             <div className="flex">
               <ClickableLink link="/manage-movies" text="Manage Movies" />
+              <ClickableLink link="/report" text="View Reports" />
               {accessLevel >= userTypeEnum.ADMIN && (
                 <div className="flex">
                   <ClickableLink link="/staffweb" text="Staff Web" />
