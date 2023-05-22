@@ -1,0 +1,57 @@
+[
+    {
+      "id": 1,
+      "title": "Movie Night Special",
+      "description": "Get 50% off on all movie tickets every Monday and Tuesday.",
+      "category": "current",
+      "startDate": "2023-06-01",
+      "endDate": "2023-06-30",
+      "image": "MovieNight.png"
+    },
+    {
+      "id": 2,
+      "title": "Student Discount",
+      "description": "Students get 20% off on movie tickets upon showing a valid student ID.",
+      "category": "discounts",
+      "startDate": "2023-06-01",
+      "endDate": "2023-06-30",
+      "image": "student.png"
+    },
+    {
+      "id": 3,
+      "title": "Combo Deal",
+      "description": "Enjoy a popcorn and soft drink combo at a discounted price of $11.",
+      "category": "fandb",
+      "startDate": "2023-06-01",
+      "endDate": "2023-06-30",
+      "image": "popcorn.jpg"
+    },
+    {
+      "id": 4,
+      "title": "Family Package",
+      "description": "Bring your family and enjoy a special package including 4 movie tickets, popcorn, and drinks.",
+      "category": "fandb",
+      "startDate": "2023-06-01",
+      "endDate": "2023-06-30",
+      "image": "familyPackage.jpg"
+    },
+    {
+      "id": 5,
+      "title": "Senior Citizen Discount",
+      "description": "Seniors aged 60 and above get 30% off on movie tickets.",
+      "category": "discounts",
+      "startDate": "2023-06-01",
+      "endDate": "2023-06-30",
+      "image": "senior.png"
+    },
+    {
+      "id": 6,
+      "title": "Kids Special",
+      "description": "Kids aged under 12 watch for free for every ticket purchased.",
+      "category": "discounts",
+      "startDate": "2023-06-01",
+      "endDate": "2023-06-30",
+      "image": "kidsDeals.png"
+    }
+  ]
+  

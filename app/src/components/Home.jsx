@@ -2,6 +2,7 @@ import MovieCard from '../components/MovieCard';
 import React, { useEffect, useState } from 'react';
 
 import MainCarousel from './Carousel';
+import CheckPurchase from './checkPurchase';
 
 import { getMovies } from '../api/movies';
 
@@ -87,12 +88,7 @@ const Home = () => {
     checkPurchaseContent = (
       <>
         <div>
-          <p>Enter Customer Email/Mobile No</p>
-          <select>
-            <option></option>
-            <option></option>
-            <option></option>
-          </select>
+          <CheckPurchase></CheckPurchase>
         </div>
       </>
     );

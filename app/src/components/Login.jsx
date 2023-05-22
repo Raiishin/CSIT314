@@ -45,7 +45,7 @@ const Login = () => {
             Email
           </label>
           <input
-            className={`border rounded w-full hover:bg-cyan-50 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 invalid:[&:not(:placeholder-shown):not(:focus)]:border-red-500 peer`}
+            className={`border rounded w-full hover:bg-cyan-50 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500 invalid:[&:not(:placeholder-shown):not(:focus)]:border-red-500 peer`}
             type="email"
             placeholder="Enter your email"
             value={email}
