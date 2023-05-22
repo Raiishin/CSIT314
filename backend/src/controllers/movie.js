@@ -8,7 +8,8 @@ import {
   where,
   doc,
   addDoc,
-  getDoc
+  getDoc,
+  setDoc
 } from 'firebase/firestore/lite';
 import config from '../config/index.js';
 import { formatDate, generateSeatMap, generateBookingId } from '../library/index.js';
@@ -183,8 +184,25 @@ const getBooking = async (req, res) => {
 };
 
 const purchaseSeats = async (req, res) => {
-  const { movieShowtimeId, seats } = req.body;
-  console.log({ movieShowtimeId, seats });
+  const { movieShowtimeId, seats, foodItem, totalCost, userId } = req.body;
+
+  // Allocate Loyalty Points to user
+  const userRef = doc(db, 'users', userId);
+  const user = await getDoc(userRef);
+  const userData = user.data();
+
+  const loyaltyPointsEarned = totalCost * 10;
+
+  await setDoc(userRef, {
+    name: userData.name,
+    email: userData.email,
+    phoneNumber: userData.phoneNumber,
+    type: userData.type,
+    walletBalance: userData.walletBalance,
+    loyaltyPoints: userData.loyaltyPoints + loyaltyPointsEarned
+  });
+
+  // <Simulate> Check for payment gateway callback
 
   // Generate Booking ID
   const bookingId = generateBookingId(new Date());
@@ -195,10 +213,9 @@ const purchaseSeats = async (req, res) => {
       number: seat.seatNumber,
       movieShowtimeId,
       bookingId,
-      status: 'sold'
+      status: 'sold',
+      foodItem
     };
-
-    console.log(insertObj);
 
     await addDoc(seatLogs, insertObj);
   });

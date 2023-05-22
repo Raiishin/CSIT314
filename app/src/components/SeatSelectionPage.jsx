@@ -2,7 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { FaArrowLeft, FaChair } from 'react-icons/fa';
 import { useParams } from 'react-router-dom';
 
-import { getSeatmap, purchaseSeats } from '../api/movies';
+import { getSeatmap } from '../api/movies';
+
+import NoneLogo from '../assets/none.png';
+import PopcornIcon from '../assets/popcorn.png';
+import NachosIcon from '../assets/nachos.png';
+import FamilyComboIcon from '../assets/familyCombo.jpg';
+import useGlobalStore from '../store/globalStore';
 
 import Payment from './Payment';
 
@@ -21,11 +27,7 @@ const SeatSelectionPage = () => {
 
   const params = useParams();
 
-  const handleReadyForPayment = async () => {
-    // const response = await purchaseSeats(params.id, selectedSeats);
-    // console.log(response);
-    setShowPaymentPart(true);
-  };
+  const userId = useGlobalStore(state => state.userId);
 
   useEffect(() => {
     const fetchSeats = async () => {
@@ -135,6 +137,7 @@ const SeatSelectionPage = () => {
     }
     return foodPrice;
   };
+
   const totalOrderPrice = totalTixPrice + calculateFood(foodOption);
 
   return (
@@ -326,11 +329,10 @@ const SeatSelectionPage = () => {
                 </div>
               </div>
 
-              {/* stuff gets pushed arnd if too many seats are selected... */}
               <span className="font-bold">Food Options:</span>
-              <form className="grid grid-cols-3 gap-2 w-full max-w-screen-sm">
-                <div className="flex items-center mt-2">
-                  <div className="mr-8">
+              <form>
+                <div className="flex items-center m-2 flex-row grid grid-cols-4">
+                  <div>
                     <input
                       className="hidden"
                       type="radio"
@@ -348,10 +350,10 @@ const SeatSelectionPage = () => {
                       style={{ width: '100px', height: '225px' }}
                     >
                       <span className="text-xs font-semibold uppercase">None</span>
-                      <img src="none.png" alt="None" className="h-14" />
+                      <img src={NoneLogo} alt="None" className="h-14" />
                     </label>
                   </div>
-                  <div className="mr-8">
+                  <div>
                     <input
                       className="hidden"
                       type="radio"
@@ -369,7 +371,7 @@ const SeatSelectionPage = () => {
                       style={{ width: '100px', height: '225px' }}
                     >
                       <span className="text-xs font-semibold uppercase">Combo 1</span>
-                      <img src="popcorn.png" alt="Popcorn" className="h-14" />
+                      <img src={PopcornIcon} className="h-14" />
                       <span className="text-xl font-bold mt-2">$11</span>
                       <ul className="text-sm mt-2">
                         <li>1x Large Popcorn</li>
@@ -378,32 +380,30 @@ const SeatSelectionPage = () => {
                     </label>
                   </div>
                   <div>
-                    <div className="mr-8">
-                      <input
-                        className="hidden"
-                        type="radio"
-                        id="nachos"
-                        name="foodOption"
-                        value="nachos_drinks"
-                        checked={foodOption === 'nachos'}
-                        onChange={e => setFoodOption(e.target.id)}
-                      />
-                      <label
-                        className={`flex flex-col p-4 border-2 border-gray-400 cursor-pointer ${
-                          foodOption === 'nachos' ? 'bg-light-gray' : ''
-                        }`}
-                        htmlFor="nachos"
-                        style={{ width: '100px', height: '225px' }}
-                      >
-                        <span className="text-xs font-semibold uppercase">Combo 2</span>
-                        <img src="nachos.png" alt="Nachos" className="h-14" />
-                        <span className="text-xl font-bold mt-2">$14</span>
-                        <ul className="text-sm mt-2">
-                          <li>1x Nachos</li>
-                          <li>1x Drinks</li>
-                        </ul>
-                      </label>
-                    </div>
+                    <input
+                      className="hidden"
+                      type="radio"
+                      id="nachos"
+                      name="foodOption"
+                      value="nachos_drinks"
+                      checked={foodOption === 'nachos'}
+                      onChange={e => setFoodOption(e.target.id)}
+                    />
+                    <label
+                      className={`flex flex-col p-4 border-2 border-gray-400 cursor-pointer ${
+                        foodOption === 'nachos' ? 'bg-light-gray' : ''
+                      }`}
+                      htmlFor="nachos"
+                      style={{ width: '100px', height: '225px' }}
+                    >
+                      <span className="text-xs font-semibold uppercase">Combo 2</span>
+                      <img src={NachosIcon} className="h-14" />
+                      <span className="text-xl font-bold mt-2">$14</span>
+                      <ul className="text-sm mt-2">
+                        <li>1x Nachos</li>
+                        <li>1x Drinks</li>
+                      </ul>
+                    </label>
                   </div>
                   <div>
                     <div className="mr-8">
@@ -424,7 +424,7 @@ const SeatSelectionPage = () => {
                         style={{ width: '100px', height: '225px' }}
                       >
                         <span className="text-xs font-semibold uppercase">Family Combo</span>
-                        <img src="FamilyCombo.jpg" alt="FamilyCombo" className="h-14" />
+                        <img src={FamilyComboIcon} alt="FamilyCombo" className="h-14" />
                         <span className="text-xl font-bold mt-2">$30</span>
                         <ul className="text-sm mt-2">
                           <li>2x Large Popcorn</li>
@@ -435,8 +435,8 @@ const SeatSelectionPage = () => {
                     </div>
                   </div>
                 </div>
+                {/* Total price */}
               </form>
-              {/* Total price */}
               <div className="mt-4">
                 <span className="text-xl font-bold">Total Order Price: </span>
                 <span className="text-xl font-bold">${totalOrderPrice}</span>
@@ -445,16 +445,20 @@ const SeatSelectionPage = () => {
 
             <div>
               <button
-                className="mt-6 bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2 px-8 rounded focus:outline-none focus:shadow-outline border-2 border-light-gray"
-                //   disabled={!selectedDate || !selectedTheater || !selectedTime}
-                onClick={handleReadyForPayment}
+                className="mt-6 bg-cyan hover:bg-dark-cyan text-white font-bold py-2 px-8 rounded focus:outline-none focus:shadow-outline border-2 border-light-gray"
+                onClick={() => {
+                  if (userId === '') alert('You need to be logged in');
+                  else setShowPaymentPart(true);
+                }}
               >
                 Ready for Payment?
               </button>
             </div>
 
             {/* hide payment part until user is ready for payment */}
-            {showPaymentPart && <Payment />}
+            {showPaymentPart && (
+              <Payment totalCost={totalOrderPrice} seats={selectedSeats} foodItem={foodOption} />
+            )}
           </div>
         )}
       </div>

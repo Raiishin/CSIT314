@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { FaArrowLeft, FaChair } from 'react-icons/fa';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import useGlobalStore from '../store/globalStore';
 
-import { getSeatmap, purchaseSeats } from '../api/movies';
+import { purchaseSeats } from '../api/movies';
 
 import VisaLogo from '../assets/visa.png';
 import MastercardLogo from '../assets/mastercard.png';
@@ -12,14 +11,17 @@ import DiscoverLogo from '../assets/discover.png';
 
 import userTypeEnum from '../constants/userTypeEnum';
 
-const Payment = () => {
+const Payment = ({ totalCost, seats, foodItem }) => {
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('');
   const [cardNumber, setCardNumber] = useState('');
   const [cardHolder, setCardHolder] = useState('');
   const [expiration, setExpiration] = useState('');
   const [cvv, setCVV] = useState('');
 
+  const userId = useGlobalStore(state => state.userId);
   const accessLevel = useGlobalStore(state => state.accessLevel);
+
+  const params = useParams();
 
   const getCardType = cardNumber => {
     const cardTypes = [
@@ -67,9 +69,16 @@ const Payment = () => {
 
   const cardType = getCardType(cardNumber);
 
-  const handleSubmit = event => {
+  const handleSubmit = async event => {
     event.preventDefault();
-    // TODO: Handle payment logic based on selected payment method
+
+    const response = await purchaseSeats(params.id, seats, foodItem, totalCost, userId);
+
+    if (response.bookingId) {
+      alert(`Your purchase was successful. Your Booking ID is ${response.bookingId}`);
+    } else {
+      alert('Purchase was unsuccessful');
+    }
   };
 
   return (
@@ -90,7 +99,6 @@ const Payment = () => {
             <option value="">Select a payment method</option>
             {accessLevel === userTypeEnum.STAFF && <option value="cash">Cash Payment</option>}
             <option value="creditCard">Credit Card</option>
-            <option value="bankQrCode">PayLah! / PayNow</option>
           </select>
         </div>
       </div>
@@ -209,26 +217,18 @@ const Payment = () => {
                   />
                 </div>
               </div>
-              <div className="mb-6">
-                <button
-                  className="bg-cyan hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline group-invalid:pointer-events-none group-invalid:opacity-30"
-                  type="submit"
-                  onClick={handleSubmit}
-                >
-                  Submit
-                </button>
-              </div>
             </form>
-          </div>
-        </div>
-      )}
 
-      {selectedPaymentMethod === 'bankQrCode' && (
-        <div className="mt-4 text-center">
-          <img
-            src="https://i0.wp.com/legendagesingapore.com/wp-content/uploads/2020/09/DBS-icon.png?resize=300%2C119&ssl=1"
-            alt="PayLah/PayNow"
-          />
+            <div className="mb-6">
+              <button
+                className="bg-cyan hover:bg-dark-cyan text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline group-invalid:pointer-events-none group-invalid:opacity-30"
+                type="submit"
+                onClick={handleSubmit}
+              >
+                Submit
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
