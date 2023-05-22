@@ -7,6 +7,8 @@ const useGlobalStore = create(set => ({
   email: '',
   phoneNumber: '',
   loyaltyPoints: undefined,
+  selectedMovieTitle: '',
+  selectedMovieImageUrl: '',
   reset: () =>
     set({
       userId: '',
@@ -14,7 +16,9 @@ const useGlobalStore = create(set => ({
       name: '',
       email: '',
       phoneNumber: '',
-      loyaltyPoints: undefined
+      loyaltyPoints: undefined,
+      selectedMovieTitle: '',
+      selectedMovieImageUrl: ''
     })
 }));
 

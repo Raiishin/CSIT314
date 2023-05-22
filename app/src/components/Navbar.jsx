@@ -44,13 +44,13 @@ const Navbar = props => {
         )}
 
         <div className="">
-          {accessLevel >= userTypeEnum.MANAGEMENT && (
+          {accessLevel === userTypeEnum.MANAGEMENT && (
             <div className="flex">
               <ClickableLink link="/report" text="View Reports" />
             </div>
           )}
 
-          {accessLevel >= userTypeEnum.ADMIN && (
+          {accessLevel === userTypeEnum.ADMIN && (
             <div className="flex">
               <ClickableLink link="/manage-movies" text="Manage Movies" />
             </div>

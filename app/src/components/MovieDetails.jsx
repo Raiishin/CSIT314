@@ -4,6 +4,7 @@ import { getMovie, getReview, getMovieShowtimes } from '../api/movies.js';
 import { getCinemas } from '../api/management.js';
 import Button from './Button';
 import { useNavigate } from 'react-router-dom';
+import useGlobalStore from '../store/globalStore';
 
 const MovieDetails = () => {
   const [movie, setMovie] = useState({});
@@ -17,8 +18,6 @@ const MovieDetails = () => {
 
   const [selectedDate, setSelectedDate] = useState('');
   const [timings, setTimings] = useState([]);
-
-  const [selectedTiming, setSelectedTiming] = useState('');
 
   const navigate = useNavigate();
 
@@ -136,6 +135,11 @@ const MovieDetails = () => {
                         className={'bg-white m-1 p-1 rounded-lg w-1/2 self-center'}
                         text={timing.showtime}
                         onClick={() => {
+                          useGlobalStore.setState({
+                            selectedMovieTitle: movie.title,
+                            selectedMovieImageUrl: movie.image
+                          });
+
                           navigate(`/tickets/${timing.id}`);
                         }}
                       />
