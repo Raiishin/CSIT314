@@ -39,11 +39,11 @@ export const checkBooking = async bookingId => {
   return responseJSON;
 };
 
-export const purchaseSeats = async (movieShowtimeId, seats) => {
+export const purchaseSeats = async (movieShowtimeId, seats, foodItem, totalCost, userId) => {
   const response = await fetch(`${config.backendEndpoint}/purchaseSeats`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ movieShowtimeId, seats })
+    body: JSON.stringify({ movieShowtimeId, seats, foodItem, totalCost, userId })
   });
 
   const responseJSON = await response.json();
