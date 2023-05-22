@@ -176,8 +176,18 @@ const getBooking = async (req, res) => {
   const showtimeDate = new Date(movieShowtimeData.date * 1000);
   const formattedShowtimeDate = formatDate(showtimeDate);
 
+  const movieSearchQuery = query(movies, where('id', '==', movieShowtimeData.movieId));
+  const movieData = await getDocs(movieSearchQuery);
+
+  let returnObject;
+  movieData.forEach(item => {
+    returnObject = item.data();
+  });
+
   return res.json({
+    movieName: returnObject.title,
     seats: seatLogsArr,
+    cinema: movieShowtimeData.cinemaName,
     date: formattedShowtimeDate,
     showtime: movieShowtimeData.showtime
   });

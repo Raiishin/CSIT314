@@ -8,6 +8,7 @@ import ContactUs from './components/ContactUs';
 import Register from './components/Register';
 
 import Login from './components/Login';
+import Promotions from './components/Promotions';
 import ResetPassword from './components/ResetPassword';
 import MovieDetails from './components/MovieDetails';
 import ManageMovies from './components/ManageMovies';
@@ -23,6 +24,7 @@ const App = () => {
         <Route path="/services" element={<Services />} />
         <Route path="/contact-us" element={<ContactUs />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/promotions" element={<Promotions />} />
         <Route path="/register" element={<Register />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/movie/:id" element={<MovieDetails />} />
