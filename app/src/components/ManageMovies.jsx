@@ -15,6 +15,12 @@ const ManageMovies = () => {
   const [timeslots, setTimeslots] = useState([]);
   const [movies, setMovies] = useState([]);
 
+  const [selectedCinema, setSelectedCinema] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedHall, setSelectedHall] = useState(null);
+  const [selectedMovieId, setSelectedMovieId] = useState(null);
+  const [selectedTimeslot, setSelectedTimeslot] = useState(null);
+
   useEffect(() => {
     const initializePageData = async () => {
       const { cinemasData } = await getCinemas();
@@ -32,12 +38,6 @@ const ManageMovies = () => {
 
     initializePageData();
   }, []);
-
-  const [selectedCinema, setSelectedCinema] = useState(null);
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [selectedHall, setSelectedHall] = useState(null);
-  const [selectedMovieId, setSelectedMovieId] = useState(null);
-  const [selectedTimeslot, setSelectedTimeslot] = useState(null);
 
   const selectDate = date => {
     setSelectedDate(date);
@@ -94,7 +94,8 @@ const ManageMovies = () => {
             return (
               <button
                 style={selectedCinema == cinema ? styles.activeCinemabutton : styles.cinemabutton}
-                onClick={() => setSelectedCinema(cinema)}>
+                onClick={() => setSelectedCinema(cinema)}
+              >
                 {cinema}
               </button>
             );
@@ -140,7 +141,8 @@ const ManageMovies = () => {
               <p style={styles.titleText}>{'Time'}</p>
               <select
                 onChange={e => setSelectedTimeslot(e.target.value)}
-                style={styles.selectStyle}>
+                style={styles.selectStyle}
+              >
                 {timeslots.map((timeslot, index) => (
                   <option value={`${timeslot}`}>{timeslot}</option>
                 ))}

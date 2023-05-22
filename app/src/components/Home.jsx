@@ -2,6 +2,7 @@ import MovieCard from '../components/MovieCard';
 import React, { useEffect, useState } from 'react';
 
 import MainCarousel from './Carousel';
+import CheckPurchase from './CheckPurchase';
 
 import { getMovies } from '../api/movies';
 
@@ -32,7 +33,7 @@ const Home = () => {
     setSelectedItem(0);
   };
 
-  var quickBuyContent, checkPurchaseContent;
+  var quickBuyContent;
 
   if (isQuickBuy) {
     quickBuyContent = (
@@ -54,7 +55,8 @@ const Home = () => {
               setSelectedItem(parseInt(e.target.value));
             }}
             disabled={cinema ? null : 'disabled'}
-            style={styles.selectStyle}>
+            style={styles.selectStyle}
+          >
             <option value="-1">-- Movies --</option>
             <option value="0">Guardians of the Galaxy Vol. 3</option>
             <option value="1">Dungeons & Dragons: Honour Among Thieves</option>
@@ -66,7 +68,8 @@ const Home = () => {
           <select
             onChange={e => setTime(e.target.value)}
             disabled={movie ? null : 'disabled'}
-            style={styles.selectStyle}>
+            style={styles.selectStyle}
+          >
             <option value="-1">-- Time --</option>
             <option value="19:00">19:00</option>
             <option value="21:00">21:00</option>
@@ -83,19 +86,6 @@ const Home = () => {
         </div>
       </>
     );
-  } else {
-    checkPurchaseContent = (
-      <>
-        <div>
-          <p>Enter Customer Email/Mobile No</p>
-          <select>
-            <option></option>
-            <option></option>
-            <option></option>
-          </select>
-        </div>
-      </>
-    );
   }
 
   return (
@@ -106,18 +96,19 @@ const Home = () => {
             <div style={styles.buyCheckButtonContainer}>
               <button
                 onClick={() => setIsQuickBuy(true)}
-                style={isQuickBuy ? styles.buyCheckButtonActive : styles.buyCheckButton}>
+                style={isQuickBuy ? styles.buyCheckButtonActive : styles.buyCheckButton}
+              >
                 {'Quick Buy'}
               </button>
               <button
                 onClick={() => setIsQuickBuy(false)}
-                style={!isQuickBuy ? styles.buyCheckButtonActive : styles.buyCheckButton}>
+                style={!isQuickBuy ? styles.buyCheckButtonActive : styles.buyCheckButton}
+              >
                 {'Check Purchase'}
               </button>
             </div>
             <div style={styles.quickBuyContainter}>
-              {quickBuyContent}
-              {checkPurchaseContent}
+              {isQuickBuy ? quickBuyContent : <CheckPurchase />}
             </div>
           </div>
           <div style={styles.buyCheckImageContainer}>

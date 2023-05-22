@@ -2,6 +2,7 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, getDocs, addDoc, query, where } from 'firebase/firestore/lite';
 import config from '../config/index.js';
+import { startOfDay } from 'date-fns';
 
 // Initialize Firebase
 const app = initializeApp(config.firebaseConfig);
@@ -37,41 +38,37 @@ const getTimeslots = async (req, res) => {
   return res.json({ timeslotsData });
 };
 
-const createMovieShowtime = async (req, res, next) => {
-  try {
-    const { cinemaName, hallId, movieId, showtime, date } = req.body;
+const createMovieShowtime = async (req, res) => {
+  const { cinemaName, hallId, movieId, showtime, date } = req.body;
 
-    const formattedDate = new Date(date);
-    const movieShowtimes = collection(db, 'movieShowtimes');
+  const formattedDate = startOfDay(new Date(date)).getTime() / 1000;
+  const movieShowtimes = collection(db, 'movieShowtimes');
 
-    // Validate if this showtime is already taken
-    const searchQuery = query(
-      movieShowtimes,
-      where('cinemaName', '==', cinemaName),
-      where('hallId', '==', hallId),
-      where('showtime', '==', showtime),
-      where('date', '==', formattedDate)
-    );
+  // Validate if this showtime is already taken
+  const searchQuery = query(
+    movieShowtimes,
+    where('cinemaName', '==', cinemaName),
+    where('hallId', '==', hallId),
+    where('showtime', '==', showtime),
+    where('date', '==', formattedDate)
+  );
 
-    const movieShowtimesData = await getDocs(searchQuery);
+  const movieShowtimesData = await getDocs(searchQuery);
 
-    // Error handling if movie showtime already taken
-    if (movieShowtimesData.docs.length !== 0)
-      return res.json({ message: 'This showtime is already taken' });
+  // Error handling if movie showtime already taken
+  if (movieShowtimesData.docs.length !== 0)
+    return res.json({ message: 'This showtime is already taken' });
 
-    // Create new user, default to being a customer
-    const resp = await addDoc(movieShowtimes, {
-      cinemaName,
-      hallId,
-      movieId,
-      showtime,
-      date: formattedDate
-    });
+  // Create new user, default to being a customer
+  const resp = await addDoc(movieShowtimes, {
+    cinemaName,
+    hallId,
+    movieId,
+    showtime,
+    date: formattedDate
+  });
 
-    return res.json({ id: resp.id });
-  } catch (err) {
-    next(err);
-  }
+  return res.json({ id: resp.id });
 };
 
 export default {

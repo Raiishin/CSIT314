@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { userLogin } from '../api/user.js';
+import { loginUser } from '../api/user.js';
 import useGlobalStore from '../store/globalStore';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,12 +12,24 @@ const Login = () => {
   const handleSubmit = async e => {
     e.preventDefault();
 
-    const response = await userLogin(email, password);
+    const response = await loginUser(email, password);
+
+    // Will return a message if an error occurred
+    if (response.message) {
+      return alert(response.message);
+    }
 
     // If successful, will return the user id
     if (response.id) {
       // Set global state and redirect back to homepage
-      useGlobalStore.setState({ userId: response.id, accessLevel: response.type });
+      useGlobalStore.setState({
+        userId: response.id,
+        accessLevel: response.type,
+        name: response.name,
+        email: response.email,
+        phoneNumber: response.phoneNumber,
+        loyaltyPoints: response.loyaltyPoints ?? 0
+      });
 
       return navigate('/');
     }
@@ -33,7 +45,8 @@ const Login = () => {
               Don't have an account?
               <div
                 className="ml-2 flex text-light-blue text-cyan-600 hover:text-cyan-700 underline underline-offset-2 cursor-pointer"
-                onClick={() => navigate('/register')}>
+                onClick={() => navigate('/register')}
+              >
                 Register Here
               </div>
             </h2>
@@ -41,11 +54,12 @@ const Login = () => {
 
           <label
             className="text-left text-cyan-600 block text-gray-700 font-medium mb-2"
-            htmlFor="email">
+            htmlFor="email"
+          >
             Email
           </label>
           <input
-            className={`border rounded w-full hover:bg-cyan-50 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 invalid:[&:not(:placeholder-shown):not(:focus)]:border-red-500 peer`}
+            className={`border rounded w-full hover:bg-cyan-50 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500 invalid:[&:not(:placeholder-shown):not(:focus)]:border-red-500 peer`}
             type="email"
             placeholder="Enter your email"
             value={email}
@@ -62,7 +76,8 @@ const Login = () => {
         <div className="mb-6">
           <label
             className="text-left text-cyan-600 block text-gray-700 font-medium mb-2"
-            htmlFor="password">
+            htmlFor="password"
+          >
             Password
           </label>
           <input
@@ -81,14 +96,16 @@ const Login = () => {
         </div>
         <div className="items-center justify-between">
           <button
-            className="bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2 px-8 rounded focus:outline-none focus:shadow-outline border-2 border-gray-300 group-invalid:pointer-events-none group-invalid:opacity-30"
-            type="submit">
+            className="bg-cyan hover:bg-dark-cyan text-white font-bold py-2 px-8 rounded focus:outline-none focus:shadow-outline border-2 border-gray-300 group-invalid:pointer-events-none group-invalid:opacity-30"
+            type="submit"
+          >
             Sign In
           </button>
         </div>
         <div
-          className="cursor-pointer text-cyan-600 hover:text-blue"
-          onClick={() => navigate('/reset-password')}>
+          className="cursor-pointer text-cyan hover:text-blue"
+          onClick={() => navigate('/reset-password')}
+        >
           Forgot your password?
         </div>
       </form>

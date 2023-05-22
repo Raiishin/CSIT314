@@ -30,7 +30,14 @@ const Register = () => {
     // If successful, will return the user id
     if (response.id) {
       // Set global state and redirect back to homepage
-      useGlobalStore.setState({ userId: response.id, accessLevel: response.type });
+      useGlobalStore.setState({
+        userId: response.id,
+        accessLevel: response.type,
+        name: response.name,
+        email: response.email,
+        phoneNumber: response.phoneNumber,
+        loyaltyPoints: response.loyaltyPoints ?? 0
+      });
 
       return navigate('/');
     }
@@ -45,7 +52,8 @@ const Register = () => {
             Already have an account?
             <div
               className="ml-2 flex text-light-blue text-cyan-600 hover:text-cyan-700 underline underline-offset-2 cursor-pointer"
-              onClick={() => navigate('/login')}>
+              onClick={() => navigate('/login')}
+            >
               Login Here
             </div>
           </h2>
@@ -73,7 +81,7 @@ const Register = () => {
             </label>
             <input
               className="hover:bg-cyan-50 w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 invalid:[&:not(:placeholder-shown):not(:focus)]:border-red-500 peer"
-              type="tel"
+              type="number"
               name="phone"
               id="phone"
               pattern="[8-9]{1}[0-9]{7}"
@@ -133,7 +141,8 @@ const Register = () => {
           <div>
             <label
               className="text-left text-cyan-600 block mb-2 font-medium"
-              htmlFor="confirmPassword">
+              htmlFor="confirmPassword"
+            >
               Confirm Password
             </label>
             <input
@@ -151,7 +160,8 @@ const Register = () => {
           <div>
             <button
               className="bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2 px-8 rounded focus:outline-none focus:shadow-outline border-2 border-gray-300 group-invalid:pointer-events-none group-invalid:opacity-30"
-              type="submit">
+              type="submit"
+            >
               Register
             </button>
           </div>

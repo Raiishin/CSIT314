@@ -8,12 +8,13 @@ import ContactUs from './components/ContactUs';
 import Register from './components/Register';
 
 import Login from './components/Login';
+import Promotions from './components/Promotions';
 import ResetPassword from './components/ResetPassword';
 import MovieDetails from './components/MovieDetails';
 import ManageMovies from './components/ManageMovies';
-
-// import BookSeats from './components/BookSeats';
-// import TestSeat from './components/test';
+import ProfilePage from './components/ProfilePage';
+import SeatSelectionPage from './components/SeatSelectionPage';
+import ManagementReport from './components/ManagementReport';
 
 const App = () => {
   return (
@@ -24,12 +25,14 @@ const App = () => {
         <Route path="/services" element={<Services />} />
         <Route path="/contact-us" element={<ContactUs />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/promotions" element={<Promotions />} />
         <Route path="/register" element={<Register />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/movie/:id" element={<MovieDetails />} />
-        {/* <Route path="/bookseats" element={<BookSeats />} /> */}
-        {/* <Route path="/TestSeat" element={<TestSeat />} /> */}
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/report" element={<ManagementReport />} />
         <Route path="/manage-movies" element={<ManageMovies />} />
+        <Route path="/tickets/:id" element={<SeatSelectionPage />} />
       </Routes>
     </div>
   );

@@ -20,15 +20,18 @@ const router = express.Router();
 router.get('/users', UserController.index);
 router.get('/user', UserController.view);
 router.post('/createUser', UserController.create);
+router.post('/updateUser', UserController.update);
 
 router.get('/movies', MovieController.index);
 router.get('/movie', MovieController.view);
 router.get('/movieShowtimes', MovieController.getMovieShowtimes);
+router.get('/seatmap', MovieController.getSeatmap);
+router.get('/checkBooking', MovieController.getBooking);
+router.post('/purchaseSeats', MovieController.purchaseSeats);
 
 router.get('/management/cinemas', ManagementController.getCinemas);
 router.get('/management/cinemaHalls', ManagementController.getCinemaHalls);
 router.get('/management/timeslots', ManagementController.getTimeslots);
-
 router.post('/management/saveShowtimes', ManagementController.createMovieShowtime);
 
 app.use('/', router); //to use the routes

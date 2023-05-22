@@ -3,8 +3,7 @@ import userTypeEnum from '../constants/userTypeEnum.js';
 
 class Customer extends User {
   constructor(id, name, email, phoneNumber, walletBalance, loyaltyPoints) {
-    super(id, name, email, userTypeEnum.CUSTOMER);
-    this.phoneNumber = phoneNumber;
+    super(id, name, email, phoneNumber, userTypeEnum.CUSTOMER);
     this.walletBalance = walletBalance ?? 0;
     this.loyaltyPoints = loyaltyPoints ?? 0;
   }
